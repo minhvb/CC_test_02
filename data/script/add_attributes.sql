@@ -1,0 +1,68 @@
+TRUNCATE TABLE policy_attributes;
+INSERT INTO policy_attributes(id, attributeType, `position`, createDate, updateDate, value, valueOfSearch) VALUES
+(1, 1, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '補助金・助成金', '補助金・助成金'),
+(2, 1, 2, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '融資制度', '融資制度'),
+(3, 1, 3, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '専門家によるコンサルティング', '専門家によるコンサルティング'),
+(4, 1, 4, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'セミナー・研修', 'セミナー・研修'),
+(5, 1, 5, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '事業者募集', '事業者募集'),
+(6, 1, 6, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'その他', 'その他'),
+
+(7, 2, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '創業・起業', '創業・起業'),
+(8, 2, 2, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '研究開発／商品・サービス開発', '研究開発／商品・サービス開発'),
+(9, 2, 3, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '販路開拓', '販路開拓'),
+(10, 2, 4, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '海外展開', '海外展開'),
+(11, 2, 5, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '経営改善', '経営改善'),
+(12, 2, 6, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '事業承継・事業再生', '事業承継・事業再生'),
+(13, 2, 7, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '人材確保', '人材確保'),
+(14, 2, 8, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '雇用環境整備', '雇用環境整備'),
+(15, 2, 9, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '人材育成', '人材育成'),
+(16, 2, 10, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '設備投資', '設備投資'),
+(17, 2, 11, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '知的財産', '知的財産'),
+(18, 2, 12, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '商店街', '商店街'),
+(19, 2, 13, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'エネルギー・環境', 'エネルギー・環境'),
+(20, 2, 14, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '健康・医療', '健康・医療'),
+(21, 2, 15, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '観光', '観光'),
+(22, 2, 16, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'その他', 'その他'),
+
+(23, 3, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '大企業', '大企業'),
+(24, 3, 2, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '中小企業者', '中小企業者'),
+(25, 3, 3, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '小規模事業者', '小規模事業者'),
+(26, 3, 4, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '個人事業者', '個人事業者'),
+(27, 3, 5, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'NPO 法人(特定非営利活動法人)', 'NPO 法人(特定非営利活動法人)'),
+(28, 3, 6, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'その他', 'その他'),
+
+(29, 4, 2, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '東京都内', '都内の事業者等に限定'),
+(30, 4, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '東京都外も含む', '都外の事業者等でも利用可'),
+
+(31, 5, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '製造業', '製造業'),
+(32, 5, 2, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'サービス業（飲食業）', 'サービス業（飲食業）'),
+(33, 5, 3, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'サービス業（宿泊業）', 'サービス業（宿泊業）'),
+(34, 5, 4, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'サービス業（その他）', 'サービス業（その他）'),
+(35, 5, 5, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '卸売・小売業', '卸売・小売業'),
+(36, 5, 6, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '情報通信業', '情報通信業'),
+(37, 5, 7, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '運輸業', '運輸業'),
+(38, 5, 8, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '建設・不動産業', '建設・不動産業'),
+(39, 5, 9, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '医療・福祉', '医療・福祉'),
+(40, 5, 10, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '農林水産業', '農林水産業'),
+(41, 5, 11, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'その他', 'その他'),
+
+(42, 7, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '100万円未満', '100万円未満'),
+(43, 7, 2, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '100万～500万円未満', '100万～500万円未満'),
+(44, 7, 3, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '500万～1000万円未満', '500万～1000万円未満'),
+(45, 7, 4, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '1000万～5000万円未満', '1000万～5000万円未満'),
+(46, 7, 5, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '5000万円以上', '5000万円以上'),
+
+(48, 8, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '1～50', '50人以下'),
+(49, 8, 2, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '51～100', '51人以上'),
+(50, 8, 3, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '101～200', '101人以上'),
+(51, 8, 4, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '201以上', '201人以上'),
+
+(53, 9, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '募集（先着型）', '募集（先着型）'),
+(54, 9, 2, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '募集（審査/抽選型）', '募集（審査/抽選型）'),
+(55, 9, 3, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '募集なし（施設・制度・Webサイト・イベントの紹介等）', '募集なし（施設・制度・Webサイト・イベントの紹介等）'),
+
+(56, 10, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'お気に入り施策', 'お気に入り施策'),
+
+(57, 11, 2, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '募集（実施）中', '募集（実施）中'),
+(58, 11, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '募集（実施）前', '募集（実施）前'),
+(59, 11, 3, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '募集（実施）終了', '募集（実施）終了')

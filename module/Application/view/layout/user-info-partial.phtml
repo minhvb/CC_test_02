@@ -1,0 +1,271 @@
+<!-------------- start info user -------------------->
+<div id="infoUserModal" class="modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">ユーザー情報更新</h4>
+            </div>
+            <div class="modal-body">
+                <form  class="form-horizontal" id="user-info-form">
+                    <div class="form-group">
+                        <label class="col-sm-2 col-xs-3 control-label none-distance-full">ID</label>
+                        <div class="col-sm-4 col-xs-9 none-distance">
+                            <h5><?php echo $userInfo['username'];?></h5>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-2 col-xs-12 control-label none-distance-full">パスワード</label>
+                        <div class="col-sm-3 col-xs-12 none-distance">
+                            <a href="javascript:void(0);" class="btn form-control btn-success" onclick="changePassword();">パスワード変更</a>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 col-xs-12 control-label none-distance-full">メールアドレス</label>
+                        <div class="col-sm-9 col-xs-12 none-distance">
+                            <input type="email" class="form-control" id="email" value="<?php echo $userInfo["email"];?>" placeholder="メールアドレス登録・更新">
+                        </div>
+                    </div>
+                    <?php
+                        $firstArray = array_slice($businessAttributes, 0, 9);
+                        $lastArray = array_slice($businessAttributes, 9, 2);
+                        $userBusiness = json_decode($userInfo["business"], true);
+                    ?>
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 col-xs-12 control-label none-distance-full"> 対象業種</label>
+                        <div class="col-sm-9 col-xs-12 box-text">
+                            <div class="row col-md-12 col-sm-12 col-xs-12">
+                                <?php foreach($firstArray as $key => $value) { ?>
+                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                    <label class="form-check-input">
+                                        <input id="userAttributes_<?php echo $value['id'] ?>" <?php if(!empty($userBusiness) && in_array($value["id"], $userBusiness)) echo "checked";?> name="userAttributes[]" type="checkbox" value="<?php echo $value['id'] ?>"/>
+                                        <label for="userAttributes_<?php echo $value['id'] ?>"></label> <?php echo $value['value'] ?>
+                                    </label>
+                                </div>
+                                <?php } ?>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label class="form-check-input">
+                                        <br/>
+                                    </label>
+                                </div>
+                                <?php foreach ($lastArray as $key => $value) { ?>
+                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                    <label class="form-check-input">
+                                        <input id="userAttributes_<?php echo $value['id'] ?>" <?php if(!empty($userBusiness) && in_array($value["id"], $userBusiness)) echo "checked";?> name="userAttributes[]" type="checkbox" value="<?php echo $value['id'] ?>"/> 
+                                        <label for="userAttributes_<?php echo $value['id'] ?>"></label> <?php echo $value['value'] ?>
+                                    </label>
+                                </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <?php if(in_array($userInfo["roleId"], $userCanShowSQ)){ ?>
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 col-xs-12 control-label none-distance-full">秘密の質問</label>
+                        <div class="col-sm-9 col-xs-12 none-distance">
+                            <select class="form-control" name="securityQuestionId" id="securityQuestionId">
+                                <option value="0">-- 秘密の質問 --</option>
+                                <?php foreach($securityQuestions as $row) { ?>
+                                <option value="<?php echo $row["id"];?>" <?php if($row["id"]==$userInfo["questionId"]) echo "selected";?> ><?php echo $row["content"];?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 col-xs-12 control-label none-distance-full">答え</label>
+                        <div class="col-sm-9 col-xs-12 none-distance">
+                            <input type="text" class="form-control" value="<?php echo $userInfo["answer"];?>" id="securityAnswer" placeholder="答え">
+                        </div>
+                    </div>
+                    <?php } ?>
+                    
+                    <div class="form-group">
+                            <div class="col-sm-2 col-xs-12 col-sm-offset-7 col-xs-offset-0 none-distance-full fixd-padding-right">
+                                <button type="button" class="btn btn-default form-control btn-space pull-right" data-dismiss="modal">戻る</button>
+                            </div>
+
+                            <div class="col-sm-2 col-xs-12 none-distance-full fixd-padding-right">
+                                <button type="button" data-toggle="modal" onclick="confirmUpdateUserModal();" class="btn btn-primary btn-space form-control pull-right">更新</button>
+                            </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+</div>
+<!-- Modal content-->
+<div class="modal fade dialog-position" id="confirmUpdateUserModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">以下のユーザー情報を更新します</h5>
+            </div>
+            <div class="modal-body">
+                <p><?php echo $messageConfirmUpdateInfo;?></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" onclick="updateUserInfo('<?php echo $userInfo["userId"];?>', '<?php echo $userInfo["roleId"];?>');">確認</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade dialog-position" id="updateUserInfoSuccessModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="closeUpdateInfoSuccessModal();">&times;</button>
+                <h4 class="modal-title">ユーザー情報更新</h4>
+            </div>
+            <div class="modal-body message"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="closeUpdateInfoSuccessModal();">完了</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade dialog-position" id="updateUserInfoFailModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">ユーザー情報更新</h4>
+            </div>
+            <div class="modal-body message"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="closeUpdateInfoFailModal();">はい</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php
+    $userBusinessArr = array();
+    if(!empty($userBusiness)){
+        foreach($userBusiness as $valueId){
+            $userBusinessArr[$valueId] = $valueId;    
+        }   
+    }   
+?>
+
+<script type="">
+    $(function(){
+        var email = '<?php echo $userInfo["email"];?>';
+        var securityQuestionId = '<?php echo $userInfo["questionId"];?>';
+        var securityAnswer = '<?php echo $userInfo["answer"];?>';
+        var userBusiness = '<?php echo json_encode($userBusinessArr);?>';
+        userBusiness = JSON.parse(userBusiness);
+        $('#infoUserModal').on('show.bs.modal', function() {
+            $('#infoUserModal #email').val(email);
+            
+            var userInfoForm = document.getElementById("user-info-form")
+            var inputs = userInfoForm.querySelectorAll("input[type='checkbox']");
+            
+            for(var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = false;
+                if(userBusiness.hasOwnProperty(inputs[i].value)){
+                    inputs[i].checked = true;   
+                }
+            }
+            if($("#securityQuestionId").length>0){
+                $("#securityQuestionId").val(securityQuestionId);    
+                $("#securityAnswer").val(securityAnswer);     
+            }
+            
+            setTimeout(function(){
+                if(navigator.appVersion.indexOf("MSIE 9.") !== -1) {
+                    $('#infoUserModal input').placeholder();
+                }
+                $('#infoUserModal #email').focus();
+            }, 10);
+        });
+    });
+    
+    function confirmUpdateUserModal(){
+        $("#confirmUpdateUserModal").modal({backdrop: 'static'});
+    }
+    
+    function updateUserInfo(userId, roleId){
+        $("#confirmUpdateUserModal").modal('hide');
+        
+        var email = $("#email").val();
+        var attributes = {};
+        var checkboxes = document.getElementsByName('userAttributes[]');
+        for (var i=0; i<checkboxes.length; i++) {
+            // And stick the checked ones onto an array...
+            if (checkboxes[i].checked) {  
+                attributes[i] = checkboxes[i].value;
+            }
+        }
+        attributes = JSON.stringify(attributes);
+    
+        var securityQuestionId, securityAnswer;
+        if($('#securityQuestionId').length>0){
+            securityQuestionId = $('#securityQuestionId').val();    
+        }
+        
+        if($('#securityAnswer').length>0){
+            securityAnswer = $('#securityAnswer').val();    
+        } 
+
+        $.ajax({
+            type: "post",
+            url: "/my-page/update-user-info",
+            data: {            
+                userId:userId,                                
+                roleId:roleId,                                
+                email:email,                                
+                attributes:attributes,                                
+                securityQuestionId:securityQuestionId,                                
+                securityAnswer:securityAnswer                                
+            },
+            success: function(response){
+                $('#confirmUpdateUserModal').modal('hide');
+                if(response.status){
+                    $('#updateUserInfoSuccessModal .message').html(response.message);               
+                    $('#updateUserInfoSuccessModal').modal({backdrop: 'static'});
+                } else {
+                    $('#updateUserInfoFailModal .message').html(response.message);               
+                    $('#updateUserInfoFailModal').modal({backdrop: 'static'});
+                }
+            },
+            error: function(response, statusText, error){
+                //$('#confirmUpdateUserModal').modal('hide');
+//                $('#updateUserInfoFailModal .message').html("<?php //echo $this->translate('MSG_CM_001_ServerError');?>");                        
+//                $('#updateUserInfoFailModal').modal({backdrop: 'static'});
+            }          
+        });
+        
+    }
+    
+    function closeUpdateInfoSuccessModal(){
+        $('#updateUserInfoSuccessModal').modal('hide');    
+        $('#infoUserModal').modal('hide');
+        location.reload();    
+    }
+    
+    function closeUpdateInfoFailModal(){
+        $('#updateUserInfoFailModal').modal('hide');       
+    }
+    
+    function changePassword(){
+        $('#infoUserModal').modal('hide');
+        $('#changePasswordModal').modal({backdrop: 'static'});  
+    }
+</script>
+
+<!-------------- end info user -------------------->

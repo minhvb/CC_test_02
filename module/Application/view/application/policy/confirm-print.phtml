@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>SanroAP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Le styles -->
+    <link href="<?php echo $this->basePath(); ?>/css/bootstrap.min.css" media="screen,print" rel="stylesheet" type="text/css">
+    <link href="<?php echo $this->basePath(); ?>/css/styleTable.css" media="screen,print" rel="stylesheet" type="text/css">
+    <link href="<?php echo $this->basePath(); ?>/css/styleLayout.css" media="screen,print" rel="stylesheet" type="text/css">
+    <link href="<?php echo $this->basePath(); ?>/css/style.css" media="screen,print" rel="stylesheet" type="text/css">
+    <link href="<?php echo $this->basePath(); ?>/css/print.css" media="screen,print" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="<?php echo $this->basePath();?>/js/jquery.min.js"></script>
+</head>
+<body>
+<?php
+use Application\Utils\DateHelper;
+/* @var $policy \Application\Entity\Policy */
+$arrPdfFiles = $policy->getPdfFile() ? json_decode($policy->getPdfFile(), true) : array();
+?>
+<div class="container">
+<div class="row">
+	<div class="col-md-2 col-sm-6 col-xs-12 pull-right">
+		<a class="btn btn-space btn-success col-md-12 col-sm-12 col-xs-12 print" href="javascript:void(0)"> <span class="icon-print-conpare"></span> 印刷</a>
+	</div>
+</div>
+<div class="container-body container-body-detail row">
+	<div class="box-header">
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-xm-12">
+				<label>
+					<h3>
+						<b><?php echo $policy->getShortName();?></b>
+					</h3>
+				</label>
+				<div class="heighthr"></div>
+				<h4>
+					<?php echo $policy->getName();?>
+				</h4>
+				<br/>
+				<?php if(!empty($policy->getSummaryUpdate())):?>
+				<h5>
+					情報更新日：
+					<?php echo DateHelper::convertTimestampToGengo($policy->getUpdateDateDisplay());?>
+				</h5>
+				<h5>更新内容の概要：</h5>
+				<h5>
+					<?php echo nl2br($policy->getSummaryUpdate());?>
+				</h5>
+				<?php endif;?>
+			</div>
+
+		</div>
+	</div>
+	<div class="box-data col-md-12">
+		<div class="row">
+			<table class="col-md-12 col-sm-12 col-xs-12 table-policy-mobile">
+				<?php foreach ($glConfig['attributePolicyType'] as $key => $values):?>
+				<?php if (isset($values['displayCreate']) && $values['displayCreate'] == 1 && isset($values['detailPolicy']) && $values['detailPolicy'] == 1) :?>
+				<tr class="title">
+					<td class="title-search col-md-3 col-sm-4 col-xs-6">
+						<h5 class="text-color-white">
+							<?php echo $values['value'];?>
+						</h5>
+					</td>
+					<td class="box-search col-md-9 col-sm-8 col-xs-6">
+						<div class="col-md-12 col-sm-12 col-xs-12 pull-right"></div>
+					</td>
+				</tr>
+				<tr class="content">
+					<td colspan="2">
+						<span>
+							<?php if(isset($attributes[$key])):?>
+								<?php foreach ($attributes[$key] as $k => $vl):?>
+									<?php echo $vl['value'];?> <br/>
+								<?php endforeach;?> 
+							<?php endif;?>
+						</span>
+					</td>
+				</tr>
+				<?php endif;?>
+				<?php endforeach;?>
+				<tr class="title">
+					<td class="title-search col-md-3 col-sm-4 col-xs-6">
+						<h5 class="text-color-white">目的</h5>
+					</td>
+					<td class="box-search col-md-9 col-sm-8 col-xs-6">
+						<div class="col-md-12 col-sm-12 col-xs-12 pull-right"></div>
+					</td>
+				</tr>
+				<tr class="content">
+					<td colspan="2"><span> <?php echo nl2br($policy->getPurpose());?>
+					</span>
+					</td>
+				</tr>
+				<tr class="title">
+					<td class="title-search col-md-3 col-sm-4 col-xs-6">
+						<h5 class="text-color-white">対象者の詳細</h5>
+					</td>
+					<td class="box-search col-md-9 col-sm-8 col-xs-6">
+						<div class="col-md-12 col-sm-12 col-xs-12 pull-right"></div>
+					</td>
+				</tr>
+				<tr class="content">
+					<td colspan="2"><span> <?php echo nl2br($policy->getDetailOfSupportArea());?>
+					</span>
+					</td>
+				</tr>
+				<tr class="title">
+					<td class="title-search col-md-3 col-sm-4 col-xs-6">
+						<h5 class="text-color-white">施策内容</h5>
+					</td>
+					<td class="box-search col-md-9 col-sm-8 col-xs-6">
+						<div class="col-md-12 col-sm-12 col-xs-12 pull-right"></div>
+					</td>
+				</tr>
+				<tr class="content">
+					<td colspan="2"><span> <?php echo nl2br($policy->getContent());?>
+					</span>
+					</td>
+				</tr>
+				<tr class="title">
+					<td class="title-search col-md-3 col-sm-4 col-xs-6">
+						<h5 class="text-color-white">事業（実施）期間の詳細</h5>
+					</td>
+					<td class="box-search col-md-9 col-sm-8 col-xs-6">
+						<div class="col-md-12 col-sm-12 col-xs-12 pull-right"></div>
+					</td>
+				</tr>
+				<tr class="content">
+					<td colspan="2"><span> <?php echo nl2br($policy->getDetailRecruitmentTime());?>
+					</span>
+					</td>
+				</tr>
+				<tr class="title">
+					<td class="title-search col-md-3 col-sm-4 col-xs-6">
+						<h5 class="text-color-white">チラシ・パンフレット</h5>
+					</td>
+					<td class="box-search col-md-9 col-sm-8 col-xs-6">
+						<div class="col-md-12 col-sm-12 col-xs-12 pull-right"></div>
+					</td>
+				</tr>
+				<tr class="content">
+					<td colspan="2">
+						<?php if ($arrPdfFiles) : ?> 
+						<span> 
+							<?php foreach ($arrPdfFiles as $file) : ?>
+							<a href="<?php echo $this->url('download', array(
+                                                'year' => DateHelper::convertTimestampToString($policy->getCreateDate(), 'Y'),
+                                                'month' => DateHelper::convertTimestampToString($policy->getCreateDate(), 'm'),
+                                                'day' => DateHelper::convertTimestampToString($policy->getCreateDate(), 'd'),
+                                                'fileName' => basename($file),
+                                            )) ?>"> 
+								<img src="<?php echo $this->basePath(); ?>/images/oficina_pdf.png" width="40" height="35" alt="<?php echo basename($file); ?>" title="<?php echo basename($file); ?>"/>
+							</a> 
+							<?php endforeach; ?>
+						</span> 
+						<?php endif; ?>
+					</td>
+				</tr>
+				<tr class="title">
+					<td class="title-search col-md-3 col-sm-4 col-xs-6">
+						<h5 class="text-color-white">ホームページ</h5>
+					</td>
+					<td class="box-search col-md-9 col-sm-8 col-xs-6">
+						<div class="col-md-12 col-sm-12 col-xs-12 pull-right"></div>
+					</td>
+				</tr>
+				<tr class="content">
+					<td colspan="2">
+					<span> 
+						<a target="_blank" href="<?php $url = $policy->getHomepage(); if (!preg_match("~^(?:f|ht)tps?://~i", $url)) { $url = "http://" . $url; } echo $url;?>"><?php echo $policy->getHomepage()?></a>
+					</span>
+					</td>
+				</tr>
+				<tr class="title">
+					<td class="title-search col-md-3 col-sm-4 col-xs-6">
+						<h5 class="text-color-white">問い合わせ先</h5>
+					</td>
+					<td class="box-search col-md-9 col-sm-8 col-xs-6">
+						<div class="col-md-12 col-sm-12 col-xs-12 pull-right"></div>
+					</td>
+				</tr>
+				<tr class="content">
+					<td colspan="2"><span> <?php echo nl2br($policy->getContact())?>
+					</span>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-2 col-sm-6 col-xs-12 pull-right">
+		<a class="btn btn-space btn-success col-md-12 col-sm-12 col-xs-12" onclick="window.print();" href="javascript:void(0)"> <span class="icon-print-conpare"></span> 印刷</a>
+	</div>
+</div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/policy/print.js"></script>
+<script>
+    $(document).ready(function () {
+    	PRINT.initLoad(<?php echo $policy->getId()?>);
+    });
+    <?php if(isset($errorMsg)){?>
+	    COMMON.errorPopup('<?php echo $errorMsg ?>');
+	<?php } ?>
+</script>

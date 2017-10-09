@@ -1,0 +1,71 @@
+<?php $query = $role != \Application\Service\LoginService::ROLE_VIEWER ? array('ref' => $role) : array() ?>
+<!--Body-->
+<div class="container content-wrapper container-body">
+    <div class="row">
+        <div class="col-sm-10 text-center col-md-offset-1">
+            <form class="form-horizontal" id="login-form" action="" method="POST">
+                <!--Error message content-->
+                <div class="form-group">
+                    <div class="col-sm-12 col-xs-12 text-left flag-notice error-box">
+                        <?php if (!empty($errors)) { ?>
+                            <ul>
+                                <?php foreach ($errors as $error) { ?>
+                                    <li><h5><?php echo $error; ?></h5></li>
+                                <?php } ?>
+                            </ul>
+                        <?php } ?>
+                    </div>
+                </div>
+                <!--Form content-->
+                <div class="form-group text-left">
+                    <label for="txtUsername"
+                           class="col-sm-4 col-xs-12 control-label"><?php echo $this->translate('MSG_LG_010_UserIdLabel'); ?></label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" class="form-control" id="txtUserName" name="username"
+                            <?php echo !empty($form) ? 'value="' . $this->escapeHtml($form['username']) . '"' : ''; ?>
+                               placeholder="<?php echo $this->translate('MSG_LG_010_UserIdLabel'); ?>">
+                    </div>
+                </div>
+                <div class="form-group text-left">
+                    <label for="txtPassword"
+                           class="col-sm-4 col-xs-12 control-label"><?php echo $this->translate('MSG_LG_011_PasswordLabel'); ?></label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="password" class="form-control" id="txtPassword" name="password" autocomplete="false"
+                               placeholder="<?php echo $this->translate('MSG_LG_011_PasswordLabel'); ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-xs-offset-0 col-sm-8 col-xs-12 ">
+                        <input type="submit" id="btnLogin"
+                               class="btn btn-success col-sm-12 col-xs-12"
+                               value="<?php echo $this->translate('MSG_LG_012_LoginLabel'); ?>">
+                        </input>
+                    </div>
+                </div>
+                <?php if ($role == \Application\Service\LoginService::ROLE_VIEWER || $role == \Application\Service\LoginService::ROLE_INPUT) { ?>
+                    <div class="form-group text-center">
+                        <div class="col-sm-offset-4 col-xs-offset-0 col-sm-8 col-xs-12">
+                            <a href="<?php echo $this->url('forgot-password', array(), array('query' => $query)); ?>"><?php echo $this->translate('MSG_LG_013_ForgotPassword'); ?></a>
+                        </div>
+                    </div>
+                <?php } ?>
+                <?php if ($role == \Application\Service\LoginService::ROLE_VIEWER) { ?>
+                    <div class="form-group text-center">
+                        <div class="col-sm-offset-4 col-xs-offset-0 col-sm-8 col-xs-12">
+                            <a href="<?php echo $this->url('register'); ?>"><?php echo $this->translate('MSG_LG_014_RegisterLink'); ?></a>
+                        </div>
+                    </div>
+                <?php } ?>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Scripts-->
+<script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/login/login.js?v=1"></script>
+
+<script>
+    $(document).ready(function () {
+        LOGIN.messageList = <?php echo json_encode($translator); ?>;
+        LOGIN.init();
+    });
+</script>

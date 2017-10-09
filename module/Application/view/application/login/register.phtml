@@ -1,0 +1,113 @@
+<div class="container content-medium-wrapper container-body">
+    <div class="box-header col-md-12">
+        <h3 class="row col-md-6">
+            <b><?php echo $this->translate('MSG_LG_026_RegisterTitle') ?></b>
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="title"></div>
+            <div class="col-sm-12 col-xs-12">
+                <form class="form-horizontal" id="register-form" action="" method="post">
+                    <!--Error message content-->
+                    <div class="form-group">
+                        <div class="col-sm-12 col-xs-12 text-left flag-notice error-box">
+                            <?php if (!empty($errors)) { ?>
+                                <ul>
+                                    <?php foreach ($errors as $error) { ?>
+                                        <li><h5><?php echo $error; ?></h5></li>
+                                    <?php } ?>
+                                </ul>
+                            <?php } ?>
+                        </div>
+                    </div>
+                    <!--Form content-->
+                    <div class="form-group">
+                        <label for="txtEmail"
+                               class="col-sm-4 col-xs-12 control-label"><?php echo $this->translate('MSG_LG_027_EmailLabel') ?></label>
+                        <div class="col-sm-8 col-xs-12">
+                            <input type="text" class="form-control" id="txtEmail"
+                                   value="<?php echo !empty($data['email']) ? $this->escapeHtml($data['email']) : ''; ?>"
+                                   placeholder="<?php echo $this->translate('MSG_LG_029_NewEmailLabel') ?>"
+                                   name="email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtConfirmEmail"
+                               class="col-sm-4 col-xs-12 control-label"><?php echo $this->translate('MSG_LG_028_EmailConfirmLabel') ?></label>
+                        <div class="col-sm-8 col-xs-12">
+                            <input type="text" class="form-control" id="txtConfirmEmail"
+                                   value="<?php echo !empty($data['email']) ? $this->escapeHtml($data['email']) : ''; ?>"
+                                   placeholder="<?php echo $this->translate('MSG_LG_028_EmailConfirmLabel') ?>"
+                                   name="confirmEmail">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtPassword"
+                               class="col-sm-4 col-xs-12 control-label"><?php echo $this->translate('MSG_LG_011_PasswordLabel') ?></label>
+                        <div class="col-sm-8 col-xs-12">
+                            <input type="password" class="form-control" id="txtPassword"
+                                   value="<?php echo !empty($data['password']) ? $this->escapeHtml($data['password']) : ''; ?>"
+                                   placeholder="<?php echo $this->translate('MSG_LG_011_PasswordLabel') ?>"
+                                   name="password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtConfirmPassword"
+                               class="col-sm-4 col-xs-12 control-label"><?php echo $this->translate('MSG_LG_030_ConfirmPasswordLabel') ?></label>
+                        <div class="col-sm-8 col-xs-12">
+                            <input type="password" class="form-control" id="txtConfirmPassword"
+                                   value="<?php echo !empty($data['password']) ? $this->escapeHtml($data['password']) : ''; ?>"
+                                   placeholder="<?php echo $this->translate('MSG_LG_030_ConfirmPasswordLabel') ?>"
+                                   name="confirmPassword">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ddlQuestionId"
+                               class="col-sm-4 col-xs-12 control-label"><?php echo $this->translate('MSG_LG_031_SecurityQuestionLabel') ?></label>
+                        <div class="col-sm-8 col-xs-12">
+                            <select class="form-control" name="questionId" id="ddlQuestionId">
+                                <?php foreach ($questions as $question) { ?>
+                                    <option <?php echo !empty($data['questionId']) && ($question['id'] == $data['questionId']) ? 'selected' : '' ?>
+                                    value="<?php echo $question['id']; ?>"><?php echo $question['content']; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtAnswer"
+                               class="col-sm-4 col-xs-12 control-label"><?php echo $this->translate('MSG_LG_032_NewSecurityAnswerLabel') ?></label>
+                        <div class="col-sm-8 col-xs-12">
+                            <input type="text" class="form-control" id="txtAnswer"
+                                   value="<?php echo !empty($data['answer']) ? $this->escapeHtml($data['answer']) : ''; ?>"
+                                   placeholder="<?php echo $this->translate('MSG_LG_032_NewSecurityAnswerLabel') ?>"
+                                   name="answer">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2 col-sm-4 col-xs-12 pull-right">
+                            <input type="submit" name="btnRegister" id="btnRegister"
+                                   value="<?php echo $this->translate('MSG_LG_033_RegisterLabel') ?>"
+                                   class="btn btn-space btn-success col-md-12 col-sm-12 col-xs-12" />
+                        </div>
+                        <div class="col-md-2 col-sm-4 col-xs-12 pull-right">
+                            <button type="button" onClick="location.href = '<?php echo $this->url('login'); ?>'"
+                                    class="btn btn-default btn-space col-md-12 col-sm-12 col-xs-12"><?php echo $this->translate('MSG_AP_005_BackLabel') ?>
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Scripts-->
+<script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/login/register.js"></script>
+
+<script>
+    $(document).ready(function () {
+        REGISTER.messageList = <?php echo json_encode($translator); ?>;
+        REGISTER.init();
+    });
+</script>

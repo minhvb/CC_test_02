@@ -1,0 +1,211 @@
+<!--Scripts-->
+<?php 
+use Application\Utils\ApplicationConst;
+use Application\Utils\DateHelper;
+?>
+<div class="container-body">
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xm-12">
+                        <h3>
+                            <b> お知らせ一覧</b>
+                        </h3>
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xm-12 pull-right text-right   ">
+                        <!--<a href="home-module-guide-main.html">-->
+                        <!--<h5>-->
+                        <!--？使い方ガイド-->
+                        <!--</h5>-->
+                        <!--</a>-->
+                    </div>
+                </div>
+            </div>
+            <div class="box-data">
+            <form method="GET" id="search-notice"> 
+                <div class="row">
+                    <div class="col-md-1 col-sm-3">
+                        <h5>
+                            ワード
+                        </h5>
+                    </div>
+                    <div class="fixd-padding-left col-md-5 col-sm-9">
+                        <input name="keyWord" class="form-control" />
+                    </div>
+                    <div class="col-md-1 col-sm-3 col-xs-4 col-md-offset-1 col-sm-offset-3 fixd-padding-left btn-space">
+                        <label class="form-check-input">
+                            <input type="checkbox" name="noticeStatus[]" value="1" /><label></label>公開待ち
+                        </label>
+                    </div>
+                    <div class="col-md-1 col-sm-3 col-xs-4 btn-space">
+                        <label class="form-check-input">
+                            <input type="checkbox" name="noticeStatus[]" value="2"/><label></label>公開中
+                        </label>
+                    </div>
+                    <div class="col-md-1 col-sm-3 col-xs-4 btn-space">
+                        <label class="form-check-input">
+                            <input type="checkbox" name="noticeStatus[]" value=""3/><label></label>非公開
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1 col-sm-3">
+                        <h5>
+                            実施期間
+                        </h5>
+                    </div>
+                    <div class="col-md-3 col-sm-4">
+                        <div class="row">
+                            <div id="datepicker" class="start-group btn-space input-group date ">
+                                <input readonly="true" name="firstPublicDate" type="text" class="form-control inputTimeNew" data-date-format="<?php echo DateHelper::DATE_FORMAT; ?> " />
+                                <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="line-height: 42px;" class="col-md-1 col-sm-1 text-center">
+                        ～
+                    </div>
+                    <div class="col-md-3 col-sm-4">
+                        <div class="row">
+                            <div id="datepicker1" class="start-group btn-space input-group date ">
+                                <input readonly="true" name="lastPublicDate" type="text" class="form-control inputTimeNew" data-date-format="<?php echo DateHelper::DATE_FORMAT; ?> " />
+                                <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-4 col-xs-12 pull-right ">
+                        <button onclick="NOTICEMANAGEMENT.searchNotice();" type="button" class="btn btn-space col-md-12 col-sm-12 col-xs-12 btn-success pull-right">絞り込み</button>
+                    </div>
+                </div>
+            </form>    
+                <div class="heighthr"></div>
+                <div id="toolBar" class="row">
+                    <div class="col-md-4 col-sm-12 col-xs-12 text-center fixd-padding-left">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <?php if ($totalResults > 0) { ?>
+                                <div class="col-md-12 col-sm-12 col-xs-12"><h5>
+                                        総件数<?php echo number_format($totalResults); ?>
+                                        件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo number_format($firstResult + 1); ?>
+                                        件から<?php echo number_format($totalResults); ?>件を表示</h5>
+                                </div>
+                            <?php } ?>
+                            <?php
+                            echo $this->partial('application/home/partial-paging.phtml', array(
+                                    'totalResults' => $totalResults,
+                                    'resultPerPage' => $resultPerPage,
+                                    'totalPages' => $totalPages,
+                                    'page' => $page,
+                                    'urlPaging' => $currentUrl
+                                )
+                            )
+                            ?>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                <h5>チェックされた行を</h5>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-md-offset-2">
+                                <button type="button" onclick="NOTICEMANAGEMENT.publicNotice();" class="btn btn-space btn-warning col-md-12 col-sm-12 col-xs-12">公開</button>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <button type="button" onclick="NOTICEMANAGEMENT.privateNotice();" class="btn btn-space btn-warning col-md-12 col-sm-12 col-xs-12">非公開</button>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <button type="button" onclick="NOTICEMANAGEMENT.deleteNotice()" class="btn btn-space btn-warning col-md-12 col-sm-12 col-xs-12">削除</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 pull-right">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                <h5><br/></h5>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <button type="button"
+                                        onclick="location.href='<?php echo $this->url('notice-management/default', array('action' => 'add-notice-normal')) ?>'"
+                                        class="btn btn-space btn-primary pull-right col-md-12 col-sm-12 col-xs-12">お知らせ</button>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12" >
+                                <button type="button"
+                                        onclick="location.href='<?php echo $this->url('notice-management/default', array('action' => 'add-notice-survey')) ?>'"
+                                        class="btn btn-space btn-primary pull-right col-md-12 col-sm-12 col-xs-12">アンケート</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="heighthr"></div>
+                <table id="table-list-notice" class="table tab-content table-bordered table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th class="text-center">
+                            <input id="checkbox-all" class="checkbox-all" type="checkbox" value="0"
+                                   onchange="COMMON.checkAllRowTable(this, NOTICEMANAGEMENT.NAME_STORAGE)" />
+                            <label for="checkbox-all"><span></span></label>
+                        </th>
+                        <th class="text-center">NO</th>
+                        <th>お知らせ名称</th>
+                        <th class="col-md-1">種類</th>
+                        <th>実施期間</th>
+                        <th class="col-md-2">更新日 </th>
+                        <th class="col-md-1">ステータス</th>
+                        <th class="col-md-1" colspan="2"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php if (!empty($notices)) { ?>
+                        <?php $i = 1; ?>
+                        <?php foreach ($notices as $key => $notice): ?>
+                        <?php $type = ($notice['type']) ? $this->translate('MSG_NO_002_SurveyQuestion') : $this->translate('MSG_NO_001_NoticeNormal'); ?>
+                        <tr id="row-notice-<?php echo  $notice['id'] ?>">
+                            <td class="text-center">
+                                <input type="checkbox" name="rowTab1[]" value="<?php echo $notice['id']; ?>" />
+                                <label></label>
+                            </td>
+                            <td class="text-center"><?php echo ($page - 1) * $resultPerPage + $i;?></td>
+                            <td>
+                                <?php echo $notice['title']; ?>
+                            </td>
+                            <td><?php echo $type; ?></td>
+                            <td><?php echo $notice['firstPublicDate'] . ' ～ ' . $notice['lastPublicDate']; ?></td>
+                            <td><?php echo $notice['updateDate']; ?></td>
+                            <?php if (
+                            (strtotime($notice['firstPublicDate']) <= time() && strtotime($notice['lastPublicDate']) > time())
+                            || (strtotime($notice['firstPublicDate']) <= time() && $notice['lastPublicDate'] == "。。。")
+                            ) { ?>
+                            <td>公開中</td>
+                            <?php } elseif (strtotime($notice['firstPublicDate']) > time() ) { ?>
+                            <td>公開待ち</td>
+                            <?php } else { ?>
+                            <td>非公開</td>
+                            <?php } ?>
+                            <td class="text-center">
+                            <button <?php echo ($notice['type']) ?'':'disabled'; ?> type="button" onclick="location.href = '<?php echo $this->url('notice-management/default', array('action' => 'export', 'id' => $notice['id'])) ?>'" class="btn btn-<?php echo ($notice['type']) ?'warning':'default'; ?> col-md-12">集計表作成</button>
+                            </td>
+                            <td class="text-center">
+                            <a href="<?php echo $notice['href']; ?>" type="button" class="btn btn-default">修正</a>
+                            </td>
+                        </tr>
+                        <?php $i++; ?>
+                        <?php endforeach ?>
+                    <?php } else { ?>
+                         <tr> <td colspan="8" class="text-center"><?php echo $this->translate('MSG_PO_036_Empty_Result') ?></td> </tr>   
+                    <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/notice/notice-management.js"></script>
+<script>
+$(function () {
+    NOTICEMANAGEMENT.init();
+});
+</script>

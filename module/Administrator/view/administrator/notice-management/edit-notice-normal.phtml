@@ -1,0 +1,103 @@
+<!--Scripts-->
+<script type="text/javascript" src="<?php use Application\Utils\ApplicationConst;
+use Application\Utils\DateHelper;
+
+$this->basePath(); ?>/js/notice/notice-management.js"></script>
+
+<div class="container content-medium-wrapper container-body">
+    <div class="box-header">
+
+        <div class="row">
+            <div class="col-md-7 col-sm-7 col-xm-12">
+                <h3>
+                    <b> お知らせの追加</b>
+                </h3>
+            </div>
+
+            <div class="col-md-3 col-sm-3 col-xm-12 pull-right text-right   ">
+                <!--<a href="home-module-guide-main.html">-->
+                <!--<h5>-->
+                <!--？使い方ガイド-->
+                <!--</h5>-->
+                <!--</a>-->
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="title"></div>
+        <div class="col-sm-12">
+            <form method="post" action="<?php echo $formURL; ?>" class="form-horizontal" id="form-input-notice-normal">
+                <div class="form-group">
+                    <div class="col-sm-12 col-xs-12">
+                        お知らせを作成します。
+                    </div>
+                </div>
+                <input type="hidden" value="<?php echo $noticeInfo['noticeId']; ?>" name="noticeId">
+                <input type="hidden" value="0" name="noticeType">
+                <div class="box-text">
+                    <div class="row form-group">
+                        <label for="input" class="col-sm-12 col-xs-12 text-left"><?php echo 'NO' . $noticeInfo['no']; ?></label>
+                    </div>
+                    <div class="row form-group">
+                        <label for="input" class="col-sm-2 col-xs-12 text-left">表題</label>
+                        <div class="col-sm-10 col-xs-12">
+                            <input value="<?php echo $noticeInfo['title']; ?>" type="text" class="form-control" name="noticeTitle" placeholder="表題">
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label for="inputPassword3" class="col-sm-2 col-xs-12">お知らせ内容</label>
+                        <div class="col-sm-10 col-xs-12">
+                            <textarea onkeyup="COMMON.textAreaAdjust(this,74)" rows="4" name="noticeDescription" class="form-control"><?php echo $noticeInfo['description']; ?></textarea>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <b>
+                                公開期間
+                            </b>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12 text-right ">
+                            <div id="datepicker" class="start-group btn-space input-group date ">
+                                <input readonly="true" id="noticeFirstPublicDate" name="noticeFirstPublicDate" type="text" class="form-control inputTimeNew" value="<?php echo $noticeInfo['firstPublicDate']; ?>" />
+                                <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                            </div>
+                        </div>
+                        <div class="col-md-1 col-sm-1 col-xs-12 text-right ">
+                            <h5>
+                                ~
+                            </h5>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12text-right ">
+                            <div id="datepicker1" class="start-group btn-space input-group date ">
+                                <input readonly="true" id="noticeLastPublicDate" name="noticeLastPublicDate" type="text" class="form-control inputTimeNew" value="<?php echo $noticeInfo['lastPublicDate']; ?>" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 col-md-offset-6 col-sm-12 col-xs-12">
+            <button type="button" class="col-md-12 col-sm-12 pull-right btn btn-default "
+                    onClick="location.href = '<?php echo $this->url('notice-management/default', array('action'=>'index'))?>'">戻る
+            </button>
+        </div>
+        <div class="col-md-3 col-sm-12 col-xs-12 ">
+            <button type=button
+                    onclick="NOTICEMANAGEMENT.ajaxSubmitForm('normal')"
+                    class="btn btn-primary col-md-12 col-sm-12 pull-right">登録
+            </button>
+        </div>
+    </div>
+</div>
+<script>
+$(function () {
+    NOTICEMANAGEMENT.init();
+});
+</script>

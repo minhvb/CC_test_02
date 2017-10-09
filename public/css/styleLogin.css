@@ -1,0 +1,30 @@
+
+.content-wrapper{
+    border: 1px solid #DADADA;
+    width: 40%;
+    margin: 0 auto;
+    margin-top: 10px;
+    margin-bottom: 10%;
+}
+@media screen and (max-width: 425px) {
+    .content-wrapper{
+        width: 100%;
+        margin-top: 5%;
+        margin-bottom: 10%;
+    }
+}
+@media screen and (max-width: 768px) {
+    .content-wrapper{
+        border: 1px solid #DADADA;
+        width: 60%;
+        margin: 0 auto;
+        margin-top: 5%;
+        margin-bottom: 10%;
+    }
+}
+.content-wrapper label.control-label{
+    text-align: left;
+}
+.form-horizontal > .form-group{
+    margin-bottom: 10px;
+}

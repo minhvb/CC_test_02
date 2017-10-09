@@ -1,0 +1,260 @@
+<link href="<?php echo $this->basePath(); ?>/css/fileinput.css" media="screen" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/jquery.form.js"></script>
+<script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/fileinput.js"></script>
+<script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/user-management/reset-password.js"></script>
+
+<div class="container-body">
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xm-12"><h3><b> ユーザー管理</b></h3></div>
+                    <div class="col-md-2 col-sm-2 col-xm-12 pull-right text-right"></div>
+                </div>
+            </div>
+            <div class="box-data">
+                <form method="GET">
+                    <div class="row">
+                        <div class="col-md-2 col-sm-3">ユーザーID検索</div>
+                        <div class="col-md-4 col-sm-6">
+                            <input type="text" name="keyword" value="<?php echo $search["keyword"];?>" maxlength="256" class="form-control" placeHolder="キーワードを入力してください" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 col-sm-3">ユーザー種別</div>
+                        <div class="col-md-4 col-sm-6">
+                            <select class="form-control" name="roleId">
+                                <option value="0"></option>
+                                <?php foreach($roles as $role){ ?>
+                                <option value="<?php echo $role["id"];?>" <?php if($search["roleId"]==$role["id"]) echo "selected"; ?> ><?php echo $role["title"];?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-12 pull-right btn-space">
+                            <button type="submit" class="col-md-12 col-sm-12 col-xs-12 btn btn-success pull-right">
+                                絞り込み
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div class="heighthr"></div>
+                <div id="toolBar" class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="none-padding-left col-md-4 col-sm-12 text-center">
+                                <?php
+                                echo $this->partial('application/home/partial-paging.phtml', array(
+                                        'totalResults' => $totalResults,
+                                        'resultPerPage' => $resultPerPage,
+                                        'totalPages' => $totalPages,
+                                        'page' => $currentPage,
+                                        'urlPaging' => $currentUrl
+                                    )
+                                );
+                                ?>                                
+                            </div>
+                            <div class="col-md-3 col-sm-12 text-center btn-space">
+                                <?php
+                                    if($totalResults==0){
+                                        $startRecord = 0;   
+                                        $endRecord = 0;   
+                                    } else {
+                                        $endRecord = $currentPage==$totalPages ? $totalResults : $startRecord + $resultPerPage;
+                                        $startRecord = $startRecord + 1;   
+                                           
+                                    }
+                                ?>
+                                <h5>総件数<?php echo $totalResults;?>件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $startRecord;?>件から<?php echo $endRecord ;?>件を表示</h5>
+                            </div>
+                            <div class="col-md-2 col-sm-12 col-xs-12 col-md-offset-1 col-xs-offset-0  btn-space">
+                                <h5 class="pull-right col-sm-12 col-xs-12 text-center">ファイル(.csv)</h5>
+                            </div>
+                            <div class="col-md-2 col-sm-6 col-md-offset-0 col-sm-offset-3 col-xs-offset-0">
+                                <button type="button" class="col-md-12 col-sm-12 col-xs-12 btn btn-space btn-primary" id="btnShowImportUserModal" style="padding-right:7px;padding-left:7px;">
+                                    ユーザーアップロード
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table tab-content table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th class="text-center">NO</th>
+                        <th>ユーザーID</th>
+                        <th>ユーザー種別</th>
+                        <th>最終ログイン日時</th>
+                        <th>更新日 </th>
+                        <th colspan="2"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        if(!empty($users)){
+                            foreach($users as $i=>$row) { 
+                        ?>
+                        <tr>
+                            <td class="text-center"><?php echo ($currentPage - 1) * $resultPerPage + $i + 1;?></td>
+                            <td><?php echo $row["userName"];?></td>
+                            <td><?php echo $row["roleTitle"];?></td>
+                            <td><?php if(!empty($row["lastLogindate"])) echo date("Y/m/d H:i", $row["lastLogindate"]);?></td>
+                            <td><?php if(!empty($row["updateDate"])) echo date("Y/m/d H:i", $row["updateDate"]);?></td>
+                            
+                            <td class="text-center">
+                                <button type="button" <?php if(in_array($row["roleId"], $userCanNotResetPass) || $row["id"]==$this->userInfo["userId"] ) echo "disabled";?> data-index="<?php echo $row["id"];?>" class="btnResetPassword btn <?php if(in_array($row["roleId"], $userCanNotResetPass) || $row["id"]==$this->userInfo["userId"] ) echo "btn-default"; else echo "btn-warning";?>">パスワードリセット</button>
+                                <input type="hidden" id="userId_<?php echo $row["id"];?>" value="<?php echo $row["id"];?>">
+                                <input type="hidden" id="userName_<?php echo $row["id"];?>" value="<?php echo $row["userName"];?>">
+                                <input type="hidden" id="roleId_<?php echo $row["id"];?>" value="<?php echo $row["roleId"];?>">
+                            </td>
+                            <td class="text-center">
+                                <button type="button" <?php if(!in_array($row["roleId"], $userCanDelete)) echo "disabled"; ?> data-index="<?php echo $row["id"];?>" class="btnDeleteUser btn <?php if(!in_array($row["roleId"], $userCanDelete)) echo "btn-default"; else echo "btn-warning";?>">削除</button>
+                            </td>
+
+                        </tr>
+                        <?php 
+                            } 
+                        } else {
+                        ?>
+                        <tr>
+                            <td colspan="7"
+                                class="text-center"><?php echo $this->translate('MSG_PO_036_Empty_Result') ?></td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php
+    echo $this->partial('administrator/partial/reset-password-modal.phtml', array("action"=>$this->url('administrator/default', array('controller'=>'user-management', 'action' => 'reset-password'))));
+    echo $this->partial('administrator/partial/reset-password-confirm-modal.phtml');
+    echo $this->partial('administrator/partial/reset-password-success-modal.phtml');
+    echo $this->partial('administrator/partial/reset-password-error-modal.phtml');
+    echo $this->partial('administrator/partial/delete-user-modal.phtml');
+    echo $this->partial('administrator/partial/delete-user-success-modal.phtml');
+    echo $this->partial('administrator/partial/delete-user-error-modal.phtml');
+    echo $this->partial('administrator/partial/import-user-modal.phtml');
+    echo $this->partial('administrator/partial/import-user-confirm-modal.phtml');
+    echo $this->partial('administrator/partial/import-user-error-modal.phtml');
+?>
+       
+<script>
+    $(function(){
+        RESET_PASSWORD.init();
+        $('#resetPasswordModal').on('shown.bs.modal', function() {
+            
+            $("#resetPasswordModal #newPassword").val("");
+            $("#resetPasswordModal #newPassword").removeClass('error');
+            setTimeout(function(){
+                if(navigator.appVersion.indexOf("MSIE 9.") !== -1) {
+                    $('#resetPasswordModal input').placeholder();
+                }
+                $('#resetPasswordModal #newPassword').focus();
+            }, 10);
+            
+            RESET_PASSWORD.validateForm.resetForm();
+        });
+        
+        $('#importUserModal').on('shown.bs.modal', function() {
+            if(COMMON.isIE9()) {
+                document.getElementById("filenameLable").innerHTML = '<input type="file" id="filename" name="filename" class="file" data-show-preview="false" style="display: none;" /> ';
+            }
+            $("#filename").val("").fileinput("refresh");
+        });
+        
+        $("#resetPasswordModal .btnCloseResetPasswordModal").click(function(){
+            $('#resetPasswordModal').modal('hide');               
+        });
+        
+        $("#btnShowImportUserModal").click(function(){
+            $("#filename").val("");
+            $('#importUserModal').modal({backdrop: 'static'});   
+        });
+        
+        $(".btnResetPassword").click(function(){
+            var id = $(this).attr("data-index");
+            
+            $("#userIdResetPassword").val($("#userId_" + id).val());    
+            $("#usernameResetPassword").val($("#userName_" + id).val());    
+            $("#roleIdResetPassword").val($("#roleId_" + id).val());
+            
+            $("#resetPasswordModal").modal({backdrop: 'static'}); 
+        });
+        
+        $('#resetPasswordConfirmModal .btnCancel').click(function(){
+            $('#resetPasswordConfirmModal').modal('hide');    
+        });
+        
+        $('.btnCloseResetPasswordSuccessModal').click(function(){
+            $('#resetPasswordSuccessModal').modal('hide');                
+        });
+        
+        $('.btnCloseResetPasswordErrorModal').click(function(){
+            $('#resetPasswordErrorModal').modal('hide');                
+        });
+        
+        $('#resetPasswordConfirmModal .btnConfirm').click(function(){
+            RESET_PASSWORD.submitPassword($("#frmResetPassword"));    
+        });
+        
+        /* Delete user */
+        $(".btnDeleteUser").click(function(){
+            var id = $(this).attr("data-index");
+            
+            $("#userIdDeleteUser").val($("#userId_" + id).val());    
+            $("#usernameDeleteUser").val($("#userName_" + id).val());    
+            $("#roleIdDeleteUser").val($("#roleId_" + id).val());
+            
+            $("#deleteUserModal .message").html($("#userName_" + id).val() + 'のユーザーIDを削除することを確認してください。');
+            $("#deleteUserModal").modal({backdrop: 'static'}); 
+        });
+        
+        $("#deleteUserModal .btnCloseDeleteUser").click(function(){
+            $('#deleteUserModal').modal('hide');
+        });
+        
+        $("#deleteUserModal .btnConfirmDeleteUser").click(function(){
+            var userId = $("#userIdDeleteUser").val();
+            var username = $("#usernameDeleteUser").val();
+            var roleId = $("#roleIdDeleteUser").val();
+            
+            $.ajax({
+                type: "POST",
+                url: "/administrator/user-management/delete-user",
+                data: {            
+                    userId:userId,                                
+                    username:username,                                
+                    roleId:roleId                                
+                },
+                success: function(response){
+                    if(response.status){
+                        $('#deleteUserModal').modal('hide');
+                        $('#deleteUserSuccessModal .message').html(response.message);               
+                        $('#deleteUserSuccessModal').modal({backdrop: 'static'});    
+                    } else {
+                        $('#deleteUserModal').modal('hide');
+                        $('#deleteUserErrorModal .message').html(response.message);               
+                        $('#deleteUserErrorModal').modal({backdrop: 'static'});    
+                    }                               
+                },
+                error: function(response, statusText, error){
+                    //$('#deleteUserModal').modal('hide');
+//                    $('#deleteUserErrorModal .message').html("<?php //echo $this->translate('MSG_UM_001_ServerError');?>");
+//                    $('#deleteUserErrorModal').modal({backdrop: 'static'});                                            
+                }          
+            });
+        });
+        
+        $("#deleteUserSuccessModal .btnConfirm").click(function(){
+            $('#deleteUserSuccessModal').modal('hide');
+            location.reload();
+        });
+        
+        $("#deleteUserErrorModal .btnCancel").click(function(){
+            $('#deleteUserErrorModal').modal('hide');
+        });
+           
+    }); 
+</script>

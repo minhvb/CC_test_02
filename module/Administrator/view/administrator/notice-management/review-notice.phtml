@@ -1,0 +1,112 @@
+<div class="container">
+    <div class="container content-medium-wrapper container-body">
+        <div class="box-header">お知らせの追加・修正完了</div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-mx-12 text-left">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-mx-12">
+                                <div class="row">
+                                    <div class="col-md-12 col-mx-12 col-sx-12">
+                                        <h5 class="col-md-2 col-sm-2 col-xs-12">
+                                            <?php echo "No" . $noticeInfo['no']; ?>
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-mx-12 col-sx-12">
+                                        <h5 class="col-md-2 col-sm-2 col-xs-12">
+                                            表題
+                                        </h5>
+                                        <h5 class="col-md-10 col-sm-10 col-xs-12 box-text">
+                                            <?php echo $noticeInfo['title']; ?>
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-mx-12 col-sx-12">
+                                        <h5 class="col-md-2 col-sm-2 col-xs-12">
+                                            お知らせ内容
+                                        </h5>
+                                        <h5 class="col-md-10 col-sm-10 col-xs-12 box-text">
+                                            <?php echo nl2br($noticeInfo['description']); ?>
+                                        </h5>
+                                    </div>
+                                </div>
+                                <?php if (!empty($noticeInfo['questions'])): ?>
+                                    <?php foreach ($noticeInfo['questions'] as $key => $question): ?>
+                                    <div class="row">
+                                        <div class="col-md-12 col-mx-12 col-sx-12">
+                                            <h5 class="col-md-2 col-sm-2 col-xs-12">
+                                                <?php echo '質問'.($key + 1) ; ?>
+                                            </h5>
+                                            <h5 class="col-md-9 col-sm-9 col-xs-12 box-text">
+                                                <?php echo $question['content']; ?>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 col-mx-12 col-sx-12 col-md-offset-2 col-sm-offset-2 col-xs-offset-2" style="padding-left: 0">
+                                            <h5 class="col-md-2 col-sm-2 col-xs-12">
+                                            <input <?php if($question['typeQuestion'] == 1) echo "checked"; ?> onclick="return false;" id="<?php echo 'cbType_'.$key; ?>" type="checkbox" /> 回答
+                                                <label for="<?php echo 'cbType_'.$key; ?>"></label>　
+                                                
+                                            </h5>
+                                            <h5 class="col-md-3 col-sm-3 col-xs-12">
+                                                <input <?php if($question['typeQuestion'] == 2) echo "checked"; ?> onclick="return false;" id="<?php echo 'cbType_'.$key; ?>" type="checkbox" /> 選択式　
+                                                <label for="<?php echo 'cbType_'.$key; ?>"></label>　
+                                            </h5>
+                                            <h5 class="col-md-3 col-sm-3 col-xs-12">
+                                                <input <?php if($question['typeQuestion'] == 0) echo "checked"; ?> onclick="return false;" id="<?php echo 'cbType_'.$key; ?>" type="checkbox" /> 自由記入式
+                                                <label for="<?php echo 'cbType_'.$key; ?>"></label>　
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <?php if (!empty($question['answers'])): ?>
+                                    <div class="row">
+                                        <div class="col-md-8 col-sm-9 col-xs-9 col-md-offset-3 col-sm-offset-3 col-xs-offset-3 column " style="padding-left: 0">
+                                            <ul class="nav nav-pills nav-stacked">
+                                            <?php foreach ($question['answers'] as $key => $answer): ?>
+                                            <li><h5 class="list-title"><?php echo 'A'.($key + 1); ?></h5> <a href="javascript:void(0)"><?php echo $answer['content']; ?></a></li>    
+                                            <?php endforeach ?>
+                                            </ul>
+                                        </div>
+                                    </div>    
+                                    <?php endif ?>
+                                    <?php endforeach ?>    
+                                <?php endif ?>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-12 col-mx-12 col-sx-12 ">
+                                        <div class="col-md-2 col-sm-2 col-xs-12">
+                                            公開期間
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12 box-text">
+                                            <?php echo $noticeInfo['firstPublicDate']; ?>
+                                        </div>
+                                        <div class="col-md-2 col-sm-1 col-xs-12 text-center " style="line-height: 31px;">
+                                            ~
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12 box-text">
+                                            <?php echo $noticeInfo['lastPublicDate']; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 40px;">
+                                    <div class="col-md-12 col-mx-12 col-sx-12 ">
+                                        <div class="col-md-5 col-sm-5 col-sx-12 pull-right">
+                                            <div class="row">
+                                                <button type="button" class="btn btn-primary col-sm-6 col-xs-12 pull-right" onclick="location.href = '<?php echo $this->url('administrator/default', array('controller' => 'notice-management'));?>'"> 一覧へ戻る</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

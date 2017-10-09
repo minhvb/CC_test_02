@@ -1,0 +1,712 @@
+<?php
+use Application\Utils\ApplicationConst;
+use Application\Utils\DateHelper;
+
+$maxLengthTitle = 100;
+$maxLengthContent = 150;
+$firstResult = $totalResults > 0 ? ($page - 1) * $resultPerPage + 1 : 0;
+$lastResult = (($page - 1) * $resultPerPage + $resultPerPage) < $totalResults ? (($page - 1) * $resultPerPage + $resultPerPage) : $totalResults;
+$isDisableSearch = in_array($filter, array('like', 'recent', 'mail')) ? true : false;
+?>
+
+<div class="container-box-search">
+    <form id="form-search" method="post">
+        <input type="hidden" id="searchBoxStatus" name="searchBoxStatus"
+               value="<?php echo (isset($searchParams) && isset($searchParams['searchBoxStatus'])) ? $searchParams['searchBoxStatus'] : '' ?>" />
+        <table class="search col-md-8 col-sm-12 col-xs-12">
+            <tr>
+                <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                    <h5 class="text-color-white">フリーワード検索</h5>
+                </td>
+                <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                    <div>
+                        <input id="txtSearchText" name="searchText" class="form-control" type="text"
+                               value="<?php echo (isset($searchParams) && isset($searchParams['searchText'])) ? $this->escapeHtml($searchParams['searchText']) : '' ?>"
+                               placeholder="キーワードを入力してください" <?php echo $isDisableSearch ? 'disabled' : '' ?> />
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="col-md-2 col-sm-4 col-xs-12 pull-right fixd-padding-right none-distance-full">
+            <button type="button" id="btnPopupLoadSearch"
+                    class="btn btn-space btn-primary col-md-12 col-sm-12 col-xs-12" data-color="primary"
+                <?php echo $isDisableSearch ? 'disabled' : '' ?>>
+                <span class="icon-flag"></span>
+                検索条件呼び出し
+            </button>
+        </div>
+        <div class="col-md-2 col-sm-4 col-xs-12 pull-right fixd-padding-right none-distance-full">
+            <button type="submit" id="btn-search"
+                    class="btn btn-space btn-success col-md-12 col-sm-12 col-xs-12"
+                <?php echo $isDisableSearch ? 'disabled' : '' ?>>
+                <span class="icon-search"></span>検索
+            </button>
+        </div>
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-md-4 col-sm-5 col-xs-12 pull-left fixd-padding-right">
+                <button type="button" id="boxSearch1" class="btn search-toggle-btn btn-space"
+                    <?php echo $isDisableSearch ? 'disabled' : '' ?>>
+                    <span class="icon-search-detail"></span>細かい条件を指定する
+                </button>
+            </div>
+            <a class="col-md-3 col-sm-4 col-xs-12 pull-right btn-space text-right" href="<?php echo $this->url('guide/default', array('action' => 'index')) ?>">
+                <img src="../images/guide.png">
+            </a>
+        </div>
+        <!--FORM SEARCH DETAIL FISRT-->
+        <?php if (!$isDisableSearch) { ?>
+            <div id="detailSearch1" class="container-search" style="display: none">
+                <!--style="display: none"-->
+
+                <table class="col-md-12 col-sm-12 col-xs-12">
+                    <tr class="row-item-header">
+                        <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                            <h5 class="text-color-white">支援内容</h5>
+                        </td>
+                        <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                            <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
+                                <button name="unSelectAll" onclick="COMMON.uncheckAllRow(this,'next')" type="button"
+                                        class="btn btn-space btn-default btn-select pull-right" data-color="primary">
+                                    &nbsp;クリア
+                                </button>
+                                <button name="selectAll" onclick="COMMON.checkAllRow(this,'next')" type="button"
+                                        class="btn btn-space btn-default btn-select pull-right" data-color="primary"><b>
+                                        &nbsp;全選択</b>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="row-item-content">
+                        <td colspan="2">
+                            <?php foreach ($searchAttributes[1] as $attr) { ?>
+                                <label class="form-check-input">
+                                    <input id="cbSearchContent_<?php echo $attr['id'] ?>" type="checkbox"
+                                        <?php echo isset($searchParams) && isset($searchParams['searchContent'])
+                                        && is_array($searchParams['searchContent']) && in_array($attr['id'], $searchParams['searchContent'])
+                                            ? 'checked="true"' : '';
+                                        ?>
+                                           name="searchContent[]" value="<?php echo $attr['id'] ?>" />
+                                    <label for="cbSearchContent_<?php echo $attr['id'] ?>"></label>
+                                    <?php echo $attr["value"]; ?>
+                                </label>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                    <tr class="row-item-header">
+                        <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                            <h5 class="text-color-white">分野</h5>
+                        </td>
+                        <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                            <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
+                                <button name="unSelectAll" onclick="COMMON.uncheckAllRow(this,'next')" type="button"
+                                        class="btn btn-space btn-default btn-select pull-right" data-color="primary">
+                                    &nbsp;クリア
+                                </button>
+                                <button name="selectAll" onclick="COMMON.checkAllRow(this,'next')" type="button"
+                                        class="btn btn-space btn-default btn-select pull-right" data-color="primary"><b>
+                                        &nbsp;全選択</b>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="row-item-content">
+                        <td colspan="2">
+                            <?php foreach ($searchAttributes[2] as $attr) { ?>
+                                <label class="form-check-input">
+                                    <input id="cbSearchField_<?php echo $attr['id'] ?>" type="checkbox"
+                                        <?php echo isset($searchParams) && isset($searchParams['searchField'])
+                                        && is_array($searchParams['searchField']) && in_array($attr['id'], $searchParams['searchField'])
+                                            ? 'checked="true"' : '';
+                                        ?>
+                                           name="searchField[]" value="<?php echo $attr['id'] ?>" />
+                                    <label for="cbSearchField_<?php echo $attr['id'] ?>"></label>
+                                    <?php echo $attr["value"]; ?>
+                                </label>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                </table>
+                <div class="clearfix">
+                </div>
+            </div>
+            <!--FORM SEARCH DETAIL FISRT END-->
+            <!----------->
+            <div class="row" id="box-search-2" style="display: none">
+                <div class="col-md-4 col-sm-5 col-xs-12 fixd-padding-right">
+                    <button type="button" id="boxSearch2" class="btn search-toggle-btn btn-space pull-left">
+                        <span class="icon-search-detail"></span>さらに細かい条件を指定する
+                    </button>
+                </div>
+                <div class="clearfix" id="detail-search-block" style=""></div>
+
+                <!--FORM SEARCH DETAIL SECOND-->
+                <div id="detailSearch2" class="container-search container-search-box2" style="display: none">
+                    <table class="col-md-12 col-sm-12 col-xs-12">
+                        <tr class="row-item-header">
+                            <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                                <h5 class="text-color-white">対象者</h5>
+                            </td>
+                            <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                                <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
+                                    <button name="unSelectAll" onclick="COMMON.uncheckAllRow(this,'next')" type="button"
+                                            class="btn btn-space btn-default btn-select pull-right"
+                                            data-color="primary">&nbsp;クリア
+                                    </button>
+                                    <button name="selectAll" onclick="COMMON.checkAllRow(this,'next')" type="button"
+                                            class="btn btn-space btn-default btn-select pull-right"
+                                            data-color="primary"><b>&nbsp;全選択</b>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="row-item-content">
+                            <td colspan="2">
+                                <?php foreach ($searchAttributes[3] as $attr) { ?>
+                                    <label class="form-check-input">
+                                        <input id="cbSearchTargetPeople_<?php echo $attr['id'] ?>" type="checkbox"
+                                            <?php echo isset($searchParams) && isset($searchParams['searchTargetPeople'])
+                                            && is_array($searchParams['searchTargetPeople']) && in_array($attr['id'], $searchParams['searchTargetPeople'])
+                                                ? 'checked="true"' : '';
+                                            ?>
+                                               name="searchTargetPeople[]" value="<?php echo $attr['id'] ?>" />
+                                        <label for="cbSearchTargetPeople_<?php echo $attr['id'] ?>"></label>
+                                        <?php echo $attr["value"]; ?>
+                                    </label>
+                                <?php } ?>
+                            </td>
+                        </tr>
+                        <tr class="row-item-header">
+                            <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                                <h5 class="text-color-white">対象業種</h5>
+                            </td>
+                            <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <button name="unSelectAll" onclick="COMMON.uncheckAllRow(this,'next')" type="button"
+                                            class="btn btn-space btn-default btn-select pull-right"
+                                            data-color="primary">&nbsp;クリア
+                                    </button>
+                                    <button name="selectAll" onclick="COMMON.checkAllRow(this,'next')" type="button"
+                                            class="btn btn-space btn-default btn-select pull-right"
+                                            data-color="primary"><b>&nbsp;全選択</b>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="row-item-content">
+                            <td colspan="2">
+                                <?php foreach ($searchAttributes[5] as $attr) { ?>
+                                    <label class="form-check-input">
+                                        <input id="cbSearchTargetJob_<?php echo $attr['id'] ?>" type="checkbox"
+                                            <?php echo isset($searchParams) && isset($searchParams['searchTargetJob'])
+                                            && is_array($searchParams['searchTargetJob']) && in_array($attr['id'], $searchParams['searchTargetJob'])
+                                                ? 'checked="true"' : '';
+                                            ?>
+                                               name="searchTargetJob[]" value="<?php echo $attr['id'] ?>" />
+                                        <label for="cbSearchTargetJob_<?php echo $attr['id'] ?>"></label>
+                                        <?php echo $attr["value"]; ?>
+                                    </label>
+                                <?php } ?>
+                            </td>
+                        </tr>
+                        <tr class="row-item-header">
+                            <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                                <h5 class="text-color-white">支援額</h5>
+                            </td>
+                            <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                                <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
+                                    <button name="unSelectAll" onclick="COMMON.uncheckAllRow(this,'next')" type="button"
+                                            class="btn btn-space btn-default btn-select pull-right"
+                                            data-color="primary">&nbsp;クリア
+                                    </button>
+                                    <button name="selectAll" onclick="COMMON.checkAllRow(this,'next')" type="button"
+                                            class="btn btn-space btn-default btn-select pull-right"
+                                            data-color="primary"><b>&nbsp;全選択</b>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="row-item-content">
+                            <td colspan="2">
+                                <?php foreach ($searchAttributes[7] as $attr) { ?>
+                                    <?php if($attr['value'] == '該当なし') continue; ?>
+                                    <label class="form-check-input">
+                                        <input id="cbSearchAmount_<?php echo $attr['id'] ?>" type="checkbox"
+                                            <?php echo isset($searchParams) && isset($searchParams['searchAmount'])
+                                            && is_array($searchParams['searchAmount']) && in_array($attr['id'], $searchParams['searchAmount'])
+                                                ? 'checked="true"' : '';
+                                            ?>
+                                               name="searchAmount[]" value="<?php echo $attr['id'] ?>" />
+                                        <label for="cbSearchAmount_<?php echo $attr['id'] ?>"></label>
+                                        <?php echo $attr["value"]; ?>
+                                    </label>
+                                <?php } ?>
+                            </td>
+                        </tr>
+                        <tr class="row-item-header">
+                            <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                                <h5 class="text-color-white">支援対象者数</h5>
+                            </td>
+                            <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                                <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
+                                    <button name="unSelectAll" onclick="COMMON.uncheckAllRow(this,'next')" type="button"
+                                            class="btn btn-space btn-default btn-select pull-right"
+                                            data-color="primary">&nbsp;クリア
+                                    </button>
+                                    <button name="selectAll" onclick="COMMON.checkAllRow(this,'next')" type="button"
+                                            class="btn btn-space btn-default btn-select pull-right"
+                                            data-color="primary"><b>&nbsp;全選択</b>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="row-item-content">
+                            <td colspan="2">
+                                <?php foreach ($searchAttributes[8] as $attr) { ?>
+                                    <?php if($attr['value'] == '該当なし') continue; ?>
+                                    <label class="form-check-input">
+                                        <input id="cbSearchNumberPeople_<?php echo $attr['id'] ?>" type="checkbox"
+                                            <?php echo isset($searchParams) && isset($searchParams['searchNumberPeople'])
+                                            && is_array($searchParams['searchNumberPeople']) && in_array($attr['id'], $searchParams['searchNumberPeople'])
+                                                ? 'checked="true"' : '';
+                                            ?>
+                                               name="searchNumberPeople[]" value="<?php echo $attr['id'] ?>" />
+                                        <label for="cbSearchNumberPeople_<?php echo $attr['id'] ?>"></label>
+                                        <?php echo $attr["value"]; ?>
+                                    </label>
+                                <?php } ?>
+                            </td>
+                        </tr>
+                        <tr class="row-item-header">
+                            <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                                <h5 class="text-color-white">募集（実施）期間</h5>
+                            </td>
+                            <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                                <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
+                                    <button name="unSelectAll" onclick="COMMON.uncheckAllRow(this,'next')" type="button"
+                                            class="btn btn-space btn-default btn-select pull-right"
+                                            data-color="primary">&nbsp;クリア
+                                    </button>
+                                    <button name="selectAll" onclick="COMMON.checkAllRow(this,'next')" type="button"
+                                            class="btn btn-space btn-default btn-select pull-right"
+                                            data-color="primary"><b>&nbsp;全選択</b>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="row-item-content">
+                            <td colspan="2">
+                                <?php foreach ($searchAttributes[11] as $attr) { ?>
+                                    <label class="form-check-input">
+                                        <input id="cbSearchPolicyType_<?php echo $attr['id'] ?>" type="checkbox"
+                                            <?php echo isset($searchParams) && isset($searchParams['searchPolicyType'])
+                                            && is_array($searchParams['searchPolicyType']) && in_array($attr['id'], $searchParams['searchPolicyType'])
+                                                ? 'checked="true"' : '';
+                                            ?>
+                                               name="searchPolicyType[]" value="<?php echo $attr['id'] ?>" />
+                                        <label for="cbSearchPolicyType_<?php echo $attr['id'] ?>"></label>
+                                        <?php echo $attr["value"]; ?>
+                                    </label>
+                                <?php } ?>
+                            </td>
+                        </tr>
+                        <tr class="row-item-header">
+                            <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                                <h5 class="text-color-white">対象地域</h5>
+                            </td>
+                            <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                                <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
+                                    <button name="unSelectAll" onclick="COMMON.uncheckAllRow(this,'next')" type="button"
+                                            class="btn btn-space btn-default btn-select pull-right"
+                                            data-color="primary">&nbsp;クリア
+                                    </button>
+                                    <button name="selectAll" onclick="COMMON.checkAllRow(this,'next')" type="button"
+                                            class="btn btn-space btn-default btn-select pull-right"
+                                            data-color="primary"><b>&nbsp;全選択</b>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="row-item-content">
+                            <td colspan="2">
+                                <?php foreach ($searchAttributes[4] as $attr) { ?>
+                                    <label class="form-check-input">
+                                        <input id="cbSearchArea_<?php echo $attr['id'] ?>" type="checkbox"
+                                            <?php echo isset($searchParams) && isset($searchParams['searchArea'])
+                                            && is_array($searchParams['searchArea']) && in_array($attr['id'], $searchParams['searchArea'])
+                                                ? 'checked="true"' : '';
+                                            ?>
+                                               name="searchArea[]" value="<?php echo $attr['id'] ?>" />
+                                        <label for="cbSearchArea_<?php echo $attr['id'] ?>"></label>
+                                        <?php echo $attr["value"];?>
+                                    </label>
+                                <?php } ?>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="clearfix"></div>
+                </div>
+
+                <!--FORM SEARCH DETAIL SECOND END-->
+                <div class="col-md-2 col-sm-4 col-xs-12 pull-right">
+                    <button id="saveCondition" type="button"
+                            class="btn btn-space btn-primary col-md-12 col-sm-12 col-xs-12 "
+                            data-color="primary">
+                        <span class="icon-save"></span>
+                        検索条件の保存
+                    </button>
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-12 pull-right">
+                    <button id="btnClearAll" onclick="HOME.clearAll()" type="button"
+                            class="btn btn-space btn-warning col-md-12 col-sm-12 col-xs-12" data-color="primary">
+                        <span class="icon-delete-clear"></span>
+                        検索条件全クリア
+                    </button>
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-12 pull-right">
+                    <button type="submit" id="btn-search-second"
+                            class="btn btn-space btn-success col-md-12 col-md-12 col-xs-12">
+                        <span class="icon-search"></span>検索
+                    </button>
+                </div>
+            </div>
+        <?php } ?>
+    </form>
+</div>
+<label class="form-check-input">
+    <input id="cbCheck1" type="checkbox" class="cb-attend" onclick="HOME.toggleAttendFlag(this)">
+    <label for="cbCheck1"></label>&nbsp;チェック項目操作
+</label>
+<div class="container-body-home" id="bodyHome">
+    <div class="row none-margin-botton" style="position: relative">
+        <div class="col-md-3 col-sm-12 col-xs-12 none-padding-right">
+            <div class="attend-box">
+                <?php if ($filter == 'like') { ?>
+                    <button type="button" onclick="HOME.removeFavouritePolicy()"
+                            class="btn col-md-12 col-sm-12 col-xs-12 btn-warning btnFavorites btn-space">
+                        <span class="icon-favorite"></span>お気に入りから削除
+                    </button>
+                <?php } else { ?>
+                    <button type="button" onclick="HOME.addFavouritePolicy()"
+                            class="btn col-md-12 col-sm-5 col-xs-12 btn-warning btnFavorites btn-space">
+                        <span class="icon-favorite"></span>お気に入り施策の登録
+                    </button>
+                <?php } ?>
+                <button type="button" class="exportCompare btn btn-warning col-md-12 col-sm-5 col-xs-12 pull-right btn-space">
+                    <span class="icon-print-conpare"></span>
+                    施策比較表作成
+                </button>
+            </div>
+        </div>
+        <u class="menu-sort col-md-9 col-sm-12 col-xs-12 btn-space">
+            <li onclick="location.href = '<?php echo "?filter=mail" ?>'" <?php echo $filter == 'mail' ? 'class="active"' : '' ?>>
+                メール通知設定施策
+                <span class="icon-active pull-right"></span>
+            </li>
+            <li onclick="location.href = '<?php echo "?filter=recent" ?>'"
+                <?php echo $filter == 'recent' ? 'class="active"' : '' ?>>
+                最近チェックした施策
+                <span class="icon-active pull-right"></span>
+            </li>
+            <li onclick="location.href = '<?php echo "?filter=like" ?>'"
+                <?php echo $filter == 'like' ? 'class="active"' : '' ?>>
+                お気に入り施策
+                <span class="icon-active pull-right"></span>
+            </li>
+            <li onclick="location.href = '<?php echo "?filter=deadline" ?>'"
+                <?php echo $filter == 'deadline' ? 'class="active"' : '' ?>>
+                もうすぐ募集締切順
+                <span class="icon-active pull-right"></span>
+            </li>
+
+            <li onclick="location.href = '<?php echo "?filter=access" ?>'"
+                <?php echo $filter == 'access' ? 'class="active"' : '' ?>>
+                アクセス数順
+                <span class="icon-active pull-right"></span>
+            </li>
+            <li onclick="location.href = '/'"
+                <?php echo $filter == 'new' ? 'class="active"' : '' ?>>
+                新着順
+                <span class="icon-active pull-right"></span>
+            </li>
+        </u>
+        <div class="col-md-3 col-sm-12 col-xs-12 none-padding-right pull-left" style="position: absolute; bottom: -5px;">
+            <h5 class="text-left text-color-green">
+                総件数<?php echo number_format($totalResults); ?>件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <?php echo number_format($firstResult); ?>件から<?php echo number_format($lastResult); ?>件を表示
+            </h5>
+        </div>
+    </div>
+    <table id="table1" class="table table-home tab-content table-bordered table-hover header-fixed">
+        <thead>
+        <tr>
+            <th class="text-center">
+                <label class="form-check-input">
+                    <input id="checkbox-all" class="checkbox-all" type="checkbox" value="1"
+                           onclick="COMMON.checkAllRowTable(this, HOME.NAME_STORAGE)" />
+                    <label for="checkbox-all"><span></span></label>
+                </label>
+            </th>
+            <th class="text-center col-md-3">施策名</th>
+            <th class="text-center col-md-6">施策内容</th>
+            <th class="text-center col-md-2" style="width: 13%">募集（実施）期間</th>
+            <th class="text-center" style="width: 6%">チラシ</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        if (!empty($data)) {
+            foreach ($data as $key => $value) {
+                $policyId = $value['id'];
+                $pdfFiles = json_decode($value['pdfFile']);
+                $shortName = mb_substr($value['name'], 0, $maxLengthTitle, 'UTF-8');
+                $name = $value['name'];
+                $shortContent = mb_substr($value['content'], 0, $maxLengthContent, 'UTF-8');
+                $content = $value['content'];
+                $policyTag = '';
+                $recruitmentStatus = $value['recruitmentStatus'];
+                if ($recruitmentStatus == ApplicationConst::TYPE_BEFORE_SOON_RECRUITMENT_TIME) {
+                    $policyTag = 'application-before';
+                } elseif ($recruitmentStatus == ApplicationConst::TYPE_RECRUITMENT_EXPIRE_SOON) {
+                    $policyTag = 'deadline';
+                } elseif ($recruitmentStatus == ApplicationConst::TYPE_AFTER_RECRUITMENT_TIME) {
+                    $policyTag = 'application-after';
+                } elseif (in_array($recruitmentStatus, array(ApplicationConst::TYPE_ANYTIME_RECRUITMENT, ApplicationConst::TYPE_IN_RECRUITMENT_TIME))) {
+                    $policyTag = 'application-doing';
+                }
+                $policyClass = empty($policyTag) ? '' : 'bg-' . $policyTag;
+                $policyIcon = empty($policyTag) ? '' : 'icon-' . $policyTag . '.png';
+                $createdDate = $value['createDate'];
+                ?>
+                <tr class="<?php echo $policyClass ?>">
+                    <td class="text-center">
+                        <input type="checkbox" name="rowTab1[]" value="<?php echo $value['id']; ?>">
+                        <label for="c1"></label>
+                        <?php echo empty($policyIcon) ? '' : '<img src="../images/' . $policyIcon . ' ">' ?>
+                    </td>
+                    <td>
+                        <a href="policy/detail/<?php echo $value['id']; ?>">
+                            <?php echo $this->escapeHtml($shortName) ?>
+                            <?php if (mb_strlen($name, 'UTF-8') > $maxLengthTitle) { ?>
+                                「・・・」
+                            <?php } ?>
+                            <?php if (!empty($value['userId'])) { ?>
+                                <span class="icon-favorite-flag"></span>
+                            <?php } ?>
+                        </a>
+                    </td>
+                    <td>
+                        <?php echo $this->escapeHtml($shortContent); ?>
+                        <?php if (mb_strlen($content, 'UTF-8') > $maxLengthContent) { ?>
+                            「・・・」
+                        <?php } ?>
+                    </td>
+                    <td>
+<!--                        --><?php //echo $this->escapeHtml($value['detailRecruitmentTime']) ?>
+                        <?php
+                        $startRecruitDate = intval($value['startRecruitmentDate']);
+                        $endRecruitDate = intval($value['endRecruitmentDate']);
+                        if($recruitmentStatus == ApplicationConst::TYPE_ANYTIME_RECRUITMENT){
+                            echo '随時';
+                        } elseif (!empty($startRecruitDate) || !empty($endRecruitDate)) {
+                            echo sprintf("%s ～<br> %s",
+                                $startRecruitDate ? DateHelper::convertTimestampToGengo($startRecruitDate) : '',
+                                $endRecruitDate ? DateHelper::convertTimestampToGengo($endRecruitDate) : '');
+                        } ?>
+                    </td>
+                    <td class="text-center">
+                        <?php if (!empty($pdfFiles)) { ?>
+                            <div class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img
+                                            src="../images/icon-print.png" height="30" width="20"
+                                            title="" /></a>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <?php foreach ($pdfFiles as $key => $file) { ?>
+                                        <li>
+                                            <a href="<?php echo $this->url('download', array(
+                                            	'policyId' => $policyId,
+                                                'year' => DateHelper::convertTimestampToString($createdDate, 'Y'),
+                                                'month' => DateHelper::convertTimestampToString($createdDate, 'm'),
+                                                'day' => DateHelper::convertTimestampToString($createdDate, 'd'),
+                                                'fileName' => basename($file),
+                                            )) ?>" >
+                                                <img src="../images/oficina_pdf.png"
+                                                     height="20" width="20"
+                                                     alt="<?php echo basename($file); ?>"
+                                                     title="<?php echo basename($file); ?>" />
+                                                <?php echo basename($file); ?>
+                                            </a>
+                                        </li>
+                                    <?php } ?>
+                                    <?php if (count($pdfFiles) > 1) { ?>
+                                        <?php ?>
+                                        <li class="text-right">
+                                            <a href="<?php echo $this->url('download', array(
+                                            	'policyId' => $policyId,
+                                                'year' => DateHelper::convertTimestampToString($createdDate, 'Y'),
+                                                'month' => DateHelper::convertTimestampToString($createdDate, 'm'),
+                                                'day' => DateHelper::convertTimestampToString($createdDate, 'd'),
+                                                'fileName' => "all_policy_$policyId.zip",
+                                            )) ?>" class="text-color-blue">すべてをダウンロード</a>
+                                        </li>
+                                    <?php } ?>
+                                </ul>
+                            </div>
+                        <?php } ?>
+                    </td>
+                </tr>
+            <?php }
+        } else { ?>
+            <tr>
+                <td colspan="6"
+                    class="text-center"><?php echo $this->translate('MSG_PO_036_Empty_Result') ?></td>
+            </tr>
+        <?php } ?>
+        </tbody>
+    </table>
+    <div class="row">
+        <h5 class="text-color-green col-md-12 col-sm-12 col-xs-12">
+            総件数<?php echo number_format($totalResults); ?>件
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo number_format($firstResult); ?>件から<?php echo number_format($lastResult); ?>件を表示</h5>
+        <div class="col-md-3 col-sm-12 col-xs-12">
+            <label class="row col-md-12 col-sm-12 col-xs-12 form-check-input">
+                <input id="cbCheck2" class="cb-attend" type="checkbox" onclick="HOME.toggleAttendFlag(this)">
+                <label for="cbCheck2"></label>&nbsp;チェック項目操作
+            </label>
+            <div class="attend-box">
+                <?php if ($filter == 'like') { ?>
+                    <button type="button" onclick="HOME.removeFavouritePolicy()"
+                            class="btn btn-warning col-md-12 col-sm-5 col-xs-12 pull-left btnFavorites btn-space">
+                        <span class="icon-favorite"></span>お気に入りから削除
+                    </button>
+                <?php } else { ?>
+                    <button type="button" onclick="HOME.addFavouritePolicy()"
+                            class="btn btn-warning col-md-12 col-sm-5 col-xs-12 pull-left btnFavorites btn-space">
+                        <span class="icon-favorite"></span>お気に入り施策の登録
+                    </button>
+                <?php } ?>
+                <button type="button" class="exportCompare btn btn-warning col-md-12 col-sm-5 col-xs-12 pull-right btn-space">
+                    <span class="icon-print-conpare"></span>
+                    施策比較表作成
+                </button>
+            </div>
+        </div>
+        <div class="col-md-9 col-sm-12 col-xs-12">
+            <nav class="text-right home-pagination">
+                <?php
+                echo $this->partial('application/home/partial-paging.phtml', array(
+                        'totalResults' => $totalResults,
+                        'resultPerPage' => $resultPerPage,
+                        'totalPages' => $totalPages,
+                        'page' => $page,
+                        'urlPaging' => $currentUrl,
+                    )
+                )
+                ?>
+            </nav>
+        </div>
+    </div>
+    <!-- =================================================================== -->
+    <div id="historySave" class="modal dialog-position fade" tabindex="-1" role="dialog"
+         aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <form id="history-form">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">検索条件の保存</h4>
+                    </div>
+                    <div class="modal-body" style="padding-bottom: 30px">
+                        <div class="form-group">
+                            <div id="errors-list-history" style="padding: 0px"
+                                 class="col-sm-12 col-xs-12 text-left flag-notice error-box">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="txtHistoryName"
+                                   class="col-sm-12 col-xs-12 control-label">検索条件名</label>
+                            <div class="col-sm-12 col-xs-12">
+                                <input id="txtHistoryName" type="input" name="historyName" class="form-control "
+                                       placeholder="" style="margin-bottom: 5px">
+                            </div>
+                        </div>
+                        <?php if (count($searchHistories) >= 5) { ?>
+                            <div class="form-group">
+                                <label for="ddlHistoryId"
+                                       class="col-sm-12 col-xs-12 control-label"><?php echo $this->translate('MSG_HO_014_SelectHistoryChange') ?></label>
+                                <div class="col-sm-12 col-xs-12">
+                                    <select class="form-control" id="ddlHistoryId" name="historyId">
+                                        <?php foreach ($searchHistories as $history) { ?>
+                                            <option value="<?php echo $history['id']; ?>"><?php echo $history['name']; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                        <?php } ?>
+                        <div style="clear: both"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+                        <button type="submit" class="btn btn-primary" id="submitSearchHistory">
+                            登録
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="searchConditionCall" class="modal fade dialog-position" tabindex="-1"
+         role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <form id="form-select-history">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">検索条件呼び出し</h4>
+                    </div>
+                    <div id="popupConfirm" class="modal-body">
+                        <div id="errors-call-history" style="padding: 0px"
+                             class="col-sm-12 col-xs-12 text-left flag-notice error-box">
+                        </div>
+                        <?php foreach ($searchHistories as $history) { ?>
+                            <div>
+                                <label class="form-check-input">
+                                    <input id="cbHistory_<?php echo $history['id'] ?>" type="radio" name="historyId"
+                                           value="<?php echo $history['id'] ?>" />
+                                    <label for="cbHistory_<?php echo $history['id'] ?>"><span></span></label><?php echo $history['name'] ?>
+                                </label>
+                            </div>
+                        <?php } ?>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+                        <button type="submit" class="btn btn-primary">確認
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <form id="exportCompareForm" method="post" action="<?php echo $this->url('home/default', array('action' => 'export-compare-policy')) ?>">
+        <input type="hidden" id="exportIdsCompare" name="exportIdsCompare"/>
+    </form>
+</div>
+
+<!--Scripts-->
+<script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/home.js"></script>
+
+<!-- /container -->
+<script>
+    $(function () {
+        var FILTER = '<?php echo $filter ?>';
+        HOME.messageList = <?php echo json_encode($translator) ;?>;
+        HOME.init(FILTER);
+        HOME.initBoxSearch();
+    });
+    var searchHistory = <?php echo json_encode(array_values($searchHistories)) ?>;
+    <?php if(isset($errorMsg)){?>
+        COMMON.errorPopup('<?php echo $errorMsg ?>');
+    <?php } ?>
+</script>

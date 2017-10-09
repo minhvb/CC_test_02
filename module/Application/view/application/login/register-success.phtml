@@ -1,0 +1,18 @@
+<div class="container content-medium-wrapper container-body">
+    <div class="box-header"><?php echo $this->translate('MSG_LG_042_RegisterSuccessTitle'); ?></div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="title"></div>
+            <div class="col-sm-12">
+                <span>
+                    <?php echo sprintf($this->translate('MSG_LG_043_RegisterSuccessMessage'), $username); ?>
+                </span>
+            </div>
+            <div class="col-md-2 pull-right">
+                <button type="button" onclick="location.href='<?php echo $this->url('login'); ?>'"
+                        class="btn btn-primary"><?php echo $this->translate('MSG_AP_004_FinishLabel'); ?>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

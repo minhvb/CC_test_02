@@ -1,0 +1,62 @@
+<?php
+$totalDisplay = 1;
+$urlPaging = strpos($urlPaging, '?') !== false ? $urlPaging . '&' : $urlPaging . '?';
+$urlPaging = str_replace("?page=" . $page . "&", "?", $urlPaging);
+$urlPaging = str_replace("&page=" . $page . "&", "&", $urlPaging);
+$urlPaging .= 'page=';
+if (isset($totalResults) && $totalResults > 0) {
+    if ($totalPages > 1) {
+        ?>
+        <ul class="pagination btn-space">
+            <?php
+            if ($totalPages <= 5) {
+                for ($i = 1; $i <= $totalPages; $i++) {
+                    ?>
+                    <li class="<?php echo $i == $page ? 'active' : '' ?>">
+                        <a <?php echo $i != $page ? 'href="' . ($urlPaging . $i) . '"' : ''; ?>><?php echo $i; ?></a>
+                    </li>
+                    <?php
+                }
+            } else {
+                if ($page > 1) { ?>
+                    <li><a href="<?php echo $urlPaging . '1'; ?>">&lt;&lt;</a></li>
+                    <li><a href="<?php echo $urlPaging . ($page - 1); ?>">&lt;</a></li>
+                <?php }
+                if ($page + $totalDisplay <= $totalPages) {
+                    if ($page < 2) {
+                        for ($i = 1; $i <= 3; $i++) {
+                            ?>
+                            <li class="<?php echo $i == $page ? 'active' : '' ?>">
+                                <a <?php echo $i != $page ? 'href="' . ($urlPaging . $i) . '"' : ''; ?>><?php echo $i; ?></a>
+                            </li>
+                            <?php
+                        }
+                    } else {
+                        for ($i = $page - $totalDisplay; $i <= $page + $totalDisplay; $i++) {
+                            ?>
+                            <li class="<?php echo $i == $page ? 'active' : '' ?>">
+                                <a <?php echo $i != $page ? 'href="' . ($urlPaging . $i) . '"' : ''; ?>><?php echo $i; ?></a>
+                            </li>
+                            <?php
+                        }
+                    }
+                } else {
+                    for ($i = $page - 2; $i <= $totalPages; $i++) {
+                        ?>
+                        <li class="<?php echo $i == $page ? 'active' : '' ?>">
+                            <a <?php echo $i != $page ? 'href="' . ($urlPaging . $i) . '"' : ''; ?>><?php echo $i; ?></a>
+                        </li>
+                        <?php
+                    }
+                }
+                if ($page < $totalPages) { ?>
+                    <li><a href="<?php echo $urlPaging . ($page + 1); ?>">&gt;</a></li>
+                    <li><a href="<?php echo $urlPaging . $totalPages; ?>">&gt;&gt;</a></li>
+                <?php }
+            }
+            ?>
+        </ul>
+        <?php
+    }
+}
+?> 

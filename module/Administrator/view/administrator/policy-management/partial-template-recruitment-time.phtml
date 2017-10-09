@@ -1,0 +1,46 @@
+<?php
+$dateFormat = \Application\Utils\DateHelper::DATE_FORMAT;
+?>
+<div class="form-group recruitment-time-item" id="recruitment-time-item-<?php echo $key; ?>">
+    <label for="inputPassword3" class="col-sm-1 col-xs-1 col-md-offset-1 col-sm-offset-1 text-right">
+        <h5 class="index"><?php echo $key; ?></h5>
+    </label>
+    <div class="start-group col-sm-3 col-xs-12 input-group date inputTime btn-space">
+        <input readonly="true" data-id="<?php echo $key; ?>"
+               value="<?php echo !empty($recruitmentTime['startDate']) ? date($dateFormat, $recruitmentTime['startDate']) : ''; ?>"
+               id='startDate_<?php echo $key; ?>' name="startDate[]" type='text' class="form-control startDate"/>
+        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+    </div>
+    <div class="end-group col-sm-3 col-xs-12 input-group date inputTime btn-space">
+        <input readonly="true" data-id="<?php echo $key; ?>"
+               value="<?php echo !empty($recruitmentTime['endDate']) ? date($dateFormat, $recruitmentTime['endDate']) : ''; ?>"
+               id='endDate_<?php echo $key; ?>' name="endDate[]" type='text' class="form-control endDate"/>
+        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+    </div>
+    <div class="deadline-group col-sm-3 col-xs-12 input-group date inputTime btn-space">
+        <input readonly="true" data-id="<?php echo $key; ?>"
+               value="<?php echo !empty($recruitmentTime['deadline']) ? date($dateFormat, $recruitmentTime['deadline']) : ''; ?>"
+               id='deadline_<?php echo $key; ?>' name="deadline[]" type='text' class="form-control deadline"/>
+        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+    </div>
+    <?php if (!isset($isDisableButton) || $isDisableButton != 1) { ?>
+        <div class="col-sm-1 col-xs-1">
+            <h5>
+                <a data-id="<?php echo $key; ?>" class="add" onclick="POLICY.addNewRow(this)" style="cursor: pointer;">
+                    <span class="col-md-1 glyphicon glyphicon-plus-sign"></span>
+                </a>
+                <a data-id="<?php echo $key; ?>" class="remove" onclick="POLICY.removeRow(this)"
+                   style="cursor: pointer;">
+                    <span class="col-md-1 glyphicon glyphicon-minus-sign"></span>
+                </a>
+            </h5>
+        </div>
+    <?php } ?>
+</div>
+<div id="error-recruitment-time-<?php echo $key; ?>" class="form-group" style="display: none;">
+    <label for="inputPassword3" class="col-sm-1 col-xs-1 col-md-offset-1 col-sm-offset-1 text-right">
+    </label>
+    <div id="error_startDate_<?php echo $key; ?>" class="col-sm-3 col-xs-12 input-group start-group">&nbsp;</div>
+    <div id="error_endDate_<?php echo $key; ?>" class="col-sm-3 col-xs-12 input-group end-group">&nbsp;</div>
+    <div id="error_deadline_<?php echo $key; ?>" class="col-sm-3 col-xs-12 input-group deadline-group">&nbsp;</div>
+</div>

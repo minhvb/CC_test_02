@@ -1,0 +1,450 @@
+<div id="settingMailModal" style="top:0px; overflow: auto !important;" class="modal dialog-position fade" tabindex="-1"
+    role="dialog" aria-hidden="true">
+    <div class="modal-content" style="width: 88%; margin: auto">
+        <div class="modal-body">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">メール通知条件設定</h4>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div style="padding:10px">
+                        <span>下記の条件に合致する施策について、新着や更新があった場合にメールにて通知します。</span>
+                    </div>
+                    <div class="col-sm-12 col-xs-12">
+                        <form id="setting-mail-form" name="setting-mail-form">
+                            <table class="col-md-12 col-sm-12 col-xs-12">
+                                <tr class="row-item-header">
+                                    <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                                        <h5 class="text-color-white">お気に入り施策</h5>
+                                    </td>
+                                    <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 pull-right"></div>
+                                    </td>
+                                </tr>
+                                <?php 
+                                    echo $this->partial('layout/partial-template-attribute-1.phtml', array(
+                                        'attribute' => $settingMailAttributes[10],
+                                        'name' => $attributePolicyType[10]["nameSearch"],
+                                        'settingMailUser' => $settingMailUser
+                                    ));
+                                ?>
+                                <tr class="row-item-header">
+                                    <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                                        <h5 class="text-color-white">支援内容</h5>
+                                    </td>
+                                    <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
+                                            <button name="unSelectAll" onclick="uncheckAllRow(this,'next')" type="button"
+                                                class="btn btn-space btn-default btn-select pull-right" data-color="primary">
+                                                &nbsp;クリア
+                                            </button>
+                                            <button name="selectAll" onclick="checkAllRow(this,'next')" type="button"
+                                                class="btn btn-space btn-default btn-select pull-right" data-color="primary"><b>
+                                                    &nbsp;全選択</b>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php 
+                                    echo $this->partial('layout/partial-template-attribute-2.phtml', array(
+                                        'attribute' => $settingMailAttributes[1],
+                                        'name' => $attributePolicyType[1]["nameSearch"],
+                                        'settingMailUser' => $settingMailUser
+                                    ));
+                                ?>
+                                <tr class="row-item-header">
+                                    <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                                        <h5 class="text-color-white">分野</h5>
+                                    </td>
+                                    <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
+                                            <button name="unSelectAll" onclick="uncheckAllRow(this,'next')" type="button"
+                                                class="btn btn-space btn-default btn-select pull-right" data-color="primary">
+                                                &nbsp;クリア
+                                            </button>
+                                            <button name="selectAll" onclick="checkAllRow(this,'next')" type="button"
+                                                class="btn btn-space btn-default btn-select pull-right" data-color="primary"><b>
+                                                    &nbsp;全選択</b>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php 
+                                    echo $this->partial('layout/partial-template-attribute-2.phtml', array(
+                                        'attribute' => $settingMailAttributes[2],
+                                        'name' => $attributePolicyType[2]["nameSearch"],
+                                        'settingMailUser' => $settingMailUser
+                                    ));
+                                ?>
+                                <tr class="row-item-header">
+                                    <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                                        <h5 class="text-color-white">対象者</h5>
+                                    </td>
+                                    <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
+                                            <button name="unSelectAll" onclick="uncheckAllRow(this,'next')" type="button"
+                                                class="btn btn-space btn-default btn-select pull-right"
+                                                data-color="primary">&nbsp;クリア
+                                            </button>
+                                            <button name="selectAll" onclick="checkAllRow(this,'next')" type="button"
+                                                class="btn btn-space btn-default btn-select pull-right"
+                                                data-color="primary"><b>&nbsp;全選択</b>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php 
+                                    echo $this->partial('layout/partial-template-attribute-2.phtml', array(
+                                        'attribute' => $settingMailAttributes[3],
+                                        'name' => $attributePolicyType[3]["nameSearch"],
+                                        'settingMailUser' => $settingMailUser
+                                    ));
+                                ?>
+                                <tr class="row-item-header">
+                                    <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                                        <h5 class="text-color-white">対象業種</h5>
+                                    </td>
+                                    <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <button name="unSelectAll" onclick="uncheckAllRow(this,'next')" type="button"
+                                                class="btn btn-space btn-default btn-select pull-right"
+                                                data-color="primary">&nbsp;クリア
+                                            </button>
+                                            <button name="selectAll" onclick="checkAllRow(this,'next')" type="button"
+                                                class="btn btn-space btn-default btn-select pull-right"
+                                                data-color="primary"><b>&nbsp;全選択</b>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php 
+                                    echo $this->partial('layout/partial-template-attribute-2.phtml', array(
+                                        'attribute' => $settingMailAttributes[5],
+                                        'name' => $attributePolicyType[5]["nameSearch"],
+                                        'settingMailUser' => $settingMailUser
+                                    ));
+                                ?>
+                                <tr class="row-item-header">
+                                    <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                                        <h5 class="text-color-white">支援額</h5>
+                                    </td>
+                                    <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
+                                            <button name="unSelectAll" onclick="uncheckAllRow(this,'next')" type="button"
+                                                class="btn btn-space btn-default btn-select pull-right"
+                                                data-color="primary">&nbsp;クリア
+                                            </button>
+                                            <button name="selectAll" onclick="checkAllRow(this,'next')" type="button"
+                                                class="btn btn-space btn-default btn-select pull-right"
+                                                data-color="primary"><b>&nbsp;全選択</b>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php 
+                                    echo $this->partial('layout/partial-template-attribute-2.phtml', array(
+                                        'attribute' => $settingMailAttributes[7],
+                                        'name' => $attributePolicyType[7]["nameSearch"],
+                                        'settingMailUser' => $settingMailUser
+                                    ));
+                                ?>
+                                <tr class="row-item-header">
+                                    <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                                        <h5 class="text-color-white">支援対象者数</h5>
+                                    </td>
+                                    <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
+                                            <button name="unSelectAll" onclick="uncheckAllRow(this,'next')" type="button"
+                                                class="btn btn-space btn-default btn-select pull-right"
+                                                data-color="primary">&nbsp;クリア
+                                            </button>
+                                            <button name="selectAll" onclick="checkAllRow(this,'next')" type="button"
+                                                class="btn btn-space btn-default btn-select pull-right"
+                                                data-color="primary"><b>&nbsp;全選択</b>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php 
+                                    echo $this->partial('layout/partial-template-attribute-2.phtml', array(
+                                        'attribute' => $settingMailAttributes[8],
+                                        'name' => $attributePolicyType[8]["nameSearch"],
+                                        'settingMailUser' => $settingMailUser
+                                    ));
+                                ?>
+                                <tr class="row-item-header">
+                                    <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                                        <h5 class="text-color-white">募集（実施）期間</h5>
+                                    </td>
+                                    <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
+                                            <button name="unSelectAll" onclick="uncheckAllRow(this,'next')" type="button"
+                                                class="btn btn-space btn-default btn-select pull-right"
+                                                data-color="primary">&nbsp;クリア
+                                            </button>
+                                            <button name="selectAll" onclick="checkAllRow(this,'next')" type="button"
+                                                class="btn btn-space btn-default btn-select pull-right"
+                                                data-color="primary"><b>&nbsp;全選択</b>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php 
+                                    echo $this->partial('layout/partial-template-attribute-2.phtml', array(
+                                        'attribute' => $settingMailAttributes[11],
+                                        'name' => $attributePolicyType[11]["nameSearch"],
+                                        'settingMailUser' => $settingMailUser
+                                    ));
+                                ?>
+                                <tr class="row-item-header">
+                                    <td class="title-search col-md-3 col-sm-3 col-xs-3">
+                                        <h5 class="text-color-white">対象地域</h5>
+                                    </td>
+                                    <td class="box-search col-md-9 col-sm-9 col-xs-9">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
+                                            <button name="unSelectAll" onclick="uncheckAllRow(this,'next')" type="button"
+                                                class="btn btn-space btn-default btn-select pull-right"
+                                                data-color="primary">&nbsp;クリア
+                                            </button>
+                                            <button name="selectAll" onclick="checkAllRow(this,'next')" type="button"
+                                                class="btn btn-space btn-default btn-select pull-right"
+                                                data-color="primary"><b>&nbsp;全選択</b>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php 
+                                    echo $this->partial('layout/partial-template-attribute-2.phtml', array(
+                                        'attribute' => $settingMailAttributes[4],
+                                        'name' => $attributePolicyType[4]["nameSearch"],
+                                        'settingMailUser' => $settingMailUser
+                                    ));
+                                ?>
+                            </table>
+                        </form>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4 col-xs-6 pull-right">
+                                <button type="button" onclick="confirmSettingMail();" class="btn btn-primary form-control btn-space col-md-4">条件保存</button>
+                            </div>
+                            <div class="col-md-3 col-sm-4 col-xs-6 pull-right">
+                                <button type="button" data-dismiss="modal" class="btn btn-default form-control btn-space">キャンセル</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- -----------------messent setting mail 2-1-1-->
+<div class="modal fade" id="settingMailConfirmModal" role="dialog">
+    <div class="modal-dialog modal-sm dialog-position">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">メール通知条件確認</h4>
+            </div>
+            <div class="modal-body message">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="closeSettingMailConfirmModal();">戻る</button>
+                <button type="button" class="btn btn-primary" onclick="saveSettingMail();" >確認</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="cannotOpenSettingMailModal" role="dialog">
+    <div class="modal-dialog modal-sm dialog-position">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">メール設定不可</h4>
+            </div>
+            <div class="modal-body message">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">はい</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="settingMailSuccessModal" role="dialog">
+    <div class="modal-dialog modal-sm dialog-position">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="closeSettingMailSuccessModal();">&times;</button>
+                <h4 class="modal-title">メール通知条件設定完了</h4>
+            </div>
+            <div class="modal-body message"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="closeSettingMailSuccessModal();">完了</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="settingMailErrorModal" role="dialog">
+    <div class="modal-dialog modal-sm dialog-position">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">メール設定エラー通知</h4>
+            </div>
+            <div class="modal-body message"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="closeSettingMailErrorModal();">はい</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        var settingMailUser = '<?php echo json_encode($settingMailUser);?>';
+        settingMailUser = JSON.parse(settingMailUser);
+
+        $('#settingMailModal').on('hidden.bs.modal', function() {
+            var settingMailForm = document.getElementById("setting-mail-form");
+            var inputs = settingMailForm.querySelectorAll("input[type='checkbox']");
+            
+            for(var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = false;
+                
+                if(settingMailUser.hasOwnProperty(inputs[i].value)){
+                    inputs[i].checked = true;   
+                }
+            }
+        });    
+    });
+
+    function getValueFromCheckBox(eleName){
+        var attributes = {};
+        var settingMailForm = document.getElementById("setting-mail-form");
+        var checkboxes = settingMailForm.querySelectorAll("input[name='" + eleName + "']");
+        for (var i=0; i<checkboxes.length; i++) {
+            // And stick the checked ones onto an array...
+            if (checkboxes[i].checked) {  
+                attributes[i] = checkboxes[i].value;
+            }
+        }
+        attributes = JSON.stringify(attributes); 
+        return attributes;   
+    }
+    
+    function checkAllRow(element){
+        $(element).parent().parent().parent().next().find('input').prop('checked', true);
+    }
+
+    function uncheckAllRow(element) {
+        $(element).parent().parent().parent().next().find('input').prop('checked', false);
+    }
+    
+    function closeSettingMailSuccessModal(){
+        $('#settingMailSuccessModal').modal('hide');   
+        location.reload();
+    }
+    
+    function closeSettingMailErrorModal(){
+        $('#settingMailErrorModal').modal('hide');
+    }
+    
+    function closeSettingMailConfirmModal(){
+        $('#settingMailConfirmModal').modal('hide');
+    }
+    
+    function confirmSettingMail(){
+        var searchContent = getValueFromCheckBox('searchContent[]');
+        var searchField = getValueFromCheckBox('searchField[]');
+        var searchTargetPeople = getValueFromCheckBox('searchTargetPeople[]');
+        var searchTargetJob = getValueFromCheckBox('searchTargetJob[]');
+        var searchArea = getValueFromCheckBox('searchArea[]');
+        var searchAmount = getValueFromCheckBox('searchAmount[]');
+        var searchNumberPeople = getValueFromCheckBox('searchNumberPeople[]');
+        var searchFavourite = getValueFromCheckBox('searchFavourite[]');
+        var searchPolicyType = getValueFromCheckBox('searchPolicyType[]');
+        
+        $.ajax({
+            type: "POST",
+            url: "/my-page/confirm-setting-mail",
+            data: {                                           
+                searchContent:searchContent,                               
+                searchField:searchField,                               
+                searchTargetPeople:searchTargetPeople,                               
+                searchTargetJob:searchTargetJob,                               
+                searchArea:searchArea,                               
+                searchAmount:searchAmount,                               
+                searchNumberPeople:searchNumberPeople,                               
+                searchFavourite:searchFavourite,                               
+                searchPolicyType:searchPolicyType                                                           
+            },
+            success: function(response){
+                if(response.status){              
+                    $('#settingMailConfirmModal .message').html(response.message);               
+                    $('#settingMailConfirmModal').modal({backdrop: 'static'});
+                } else {
+                    $('#settingMailErrorModal .message').html(response.message);               
+                    $('#settingMailErrorModal').modal({backdrop: 'static'});
+                }           
+            },
+            error: function(response, statusText, error){
+                //$('#settingMailErrorModal .message').html("<?php //echo $this->translate('MSG_CM_001_ServerError');?>");                        
+//                $('#settingMailErrorModal').modal({backdrop: 'static'});
+            }          
+        });       
+    }
+    
+    function saveSettingMail(){
+        var searchContent = getValueFromCheckBox('searchContent[]');
+        var searchField = getValueFromCheckBox('searchField[]');
+        var searchTargetPeople = getValueFromCheckBox('searchTargetPeople[]');
+        var searchTargetJob = getValueFromCheckBox('searchTargetJob[]');
+        var searchArea = getValueFromCheckBox('searchArea[]');
+        var searchAmount = getValueFromCheckBox('searchAmount[]');
+        var searchNumberPeople = getValueFromCheckBox('searchNumberPeople[]');
+        var searchFavourite = getValueFromCheckBox('searchFavourite[]');
+        var searchPolicyType = getValueFromCheckBox('searchPolicyType[]');
+        
+        $.ajax({
+            type: "POST",
+            url: "/my-page/save-setting-mail",
+            data: {            
+                searchContent:searchContent,                               
+                searchField:searchField,                               
+                searchTargetPeople:searchTargetPeople,                               
+                searchTargetJob:searchTargetJob,                               
+                searchArea:searchArea,                               
+                searchAmount:searchAmount,                               
+                searchNumberPeople:searchNumberPeople,                               
+                searchFavourite:searchFavourite,                               
+                searchPolicyType:searchPolicyType                              
+            },
+            success: function(response){
+                $('#settingMailConfirmModal').modal('hide'); 
+                if(response.status){              
+                    $('#settingMailSuccessModal .message').html(response.message);               
+                    $('#settingMailSuccessModal').modal({backdrop: 'static'});               
+                } else {
+                    $('#settingMailErrorModal .message').html(response.message);               
+                    $('#settingMailErrorModal').modal({backdrop: 'static'});       
+                }           
+            },
+            error: function(response, statusText, error){
+                //$('#settingMailErrorModal .message').html("<?php //echo $this->translate('MSG_CM_001_ServerError');?>");                        
+//                $('#settingMailErrorModal').modal({backdrop: 'static'});
+            }          
+        });   
+    }
+</script>

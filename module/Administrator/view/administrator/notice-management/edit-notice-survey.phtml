@@ -1,0 +1,236 @@
+<!--Scripts-->
+<script type="text/javascript" src="<?php use Application\Utils\ApplicationConst;
+use Application\Utils\DateHelper;
+
+$this->basePath(); ?>/js/notice/notice-management.js"></script>
+<style type="text/css">
+    textarea {
+        overflow: hidden;
+        height: 74px;
+    }
+    .answerInput {
+        height: 34px;
+    }
+    .answerIndex, .controlButton {
+        margin-top: 7px;
+    }
+</style>
+<div class="container">
+    <div class="container container-body">
+        <div class="box-header">アンケートの追加</div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-mx-12 text-left">
+                    <form class="form-horizontal" id="form-input-notice-survey" method="post" action="saveNoticeSurveyAction">
+                        <div class="form-group">
+                            <div class="col-md-2">NO</div>
+                        </div>
+                        <input type="hidden" value="1" name="noticeType">
+                        <input type="hidden" value="<?php echo $noticeInfo['noticeId']; ?>" name="noticeId">
+                        <input type="hidden" value="<?php echo $noticeInfo['surveyId']; ?>" name="surveyId">
+                        <div class="form-group  ">
+                            <h5 class="col-md-2 col-sm-2">表題</h5>
+                            <div class="col-md-10 col-sm-10 col-xs-12 fixd-padding-left">
+                                <input name="noticeTitle" value="<?php echo $noticeInfo['title']; ?>" class="form-control col-md-12 col-sm-12 col-xs-12" placeholder="表題 （お知らせに表示する内容）" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h5 class="col-md-2 col-sm-2">お知らせ内容</h5>
+                            <div class="col-md-10 col-sm-10 col-xs-12 fixd-padding-left">
+                                <textarea name="noticeDescription" class="col-md-12 col-sm-12 col-xs-12" placeholder="（アンケートの趣旨、協力依頼などを記載）" rows="2"><?php echo $noticeInfo['description']; ?></textarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div id="createView">
+                        <?php foreach ($noticeInfo['questions'] as $key => $question): ?>
+                            <?php if ($question['typeQuestion'] == 0){ ?>
+                            <div class="form-group question">
+                                <div class="view " hidden>
+                                    <div class="col-md-12">
+                                        <div class="heighthr"></div>
+                                        <div class="row">
+                                            <h5 class="col-md-2 col-md-12">質問<span class="index">1</span></h5>
+                                            <div class="col-md-10 col-sm-12 col-xs-12 none-distance">
+                                                <div class="btn-space col-md-7 col-sm-12 col-xs-12 box-text" >本施策について施策の印象をお聞かせください。</div>
+                                                <div class="btn-space col-md-offset-1 fixd-padding-right col-md-1 col-sm-2 col-xs-12">
+                                                    <button onclick="NOTICEMANAGEMENT.editQuestion(this)" type="button" name="type-not-question" class="btn btn-success col-md-12 col-sm-12 col-xs-12 pull-info" >修正</button>
+                                                </div>
+                                                <div class="btn-space fixd-padding-right col-md-1 col-sm-2 col-xs-12">
+                                                    <button onclick="NOTICEMANAGEMENT.delQuestion(this)" type="button" class="btn btn-success col-md-12 col-sm-12 col-xs-12 pull-right" >削除</button>
+                                                </div>
+                                                <div class="btn-space col-md-2 col-sm-3 col-xs-12 ">
+                                                    <select onchange="NOTICEMANAGEMENT.addNewQuestion(this)" class="form-control btn btn-success">
+                                                        <option disabled="" selected="" hidden="" value="0">新質問追加</option>
+                                                        <option class="type-bg-white" value="1">選択式</option>
+                                                        <option class="type-bg-white" value="2">自由記入式</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-offset-2">
+                                                <div class="errorHidden btn-space col-md-7 col-sm-12 col-xs-12">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="edit questionRow">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <h5 class="col-md-2">質問<span class="index">1</span></h5>
+                                            <div class="col-md-10 col-sm-10 col-xs-12 fixd-padding-left">
+                                            <input class="questionType" value="0" type="hidden"/>
+                                            <textarea class="col-md-12 col-sm-12 col-xs-12" placeholder="質問を入力してください" rows="2"><?php echo $question['content']; ?></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10 col-sm-10 col-xs-12 pull-right">
+                                        <div class="row">
+                                            <div class="col-md-2 col-md-offset-8 col-sm-4 col-xs-12 fixd-padding-right">
+                                                <button onclick="NOTICEMANAGEMENT.cancelSaveQuestion(this)" type="button" name="type-question" class="btn btn-space btn-default col-md-11 col-sm-12 col-xs-12 pull-right" >キャンセル</button>
+                                            </div>
+                                            <div class="col-md-2 col-sm-4 col-xs-12">
+                                                <button onclick="NOTICEMANAGEMENT.saveQuestion(this)" name="type-question" type="button"  class="btn btn-space btn-primary col-md-12 col-sm-12 col-xs-12 pull-right" >保存</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>    
+                            <?php } elseif($question['typeQuestion'] == 1 || $question['typeQuestion'] == 2) { ?>
+                            <div class="form-group question">
+                                <div class="view" hidden>
+                                    <div class="col-md-12">
+                                        <div class="heighthr" ></div>
+                                        <div class="row">
+                                            <h5 class="col-md-2">質問<span class="index">2</span></h5>
+                                            <div class="col-md-10 col-sm-12 col-xs-12 none-distance">
+                                                <div class="col-md-7 box-text btn-space" >本施策について施策の印象をお聞かせください。</div>
+                                                <div class="btn-space col-md-offset-1 fixd-padding-right col-md-1 col-sm-2 col-xs-12">
+                                                    <button onclick="NOTICEMANAGEMENT.editQuestion(this)" type="button" name="type-not-question" class="btn btn-success col-md-12 col-sm-12 col-xs-12 pull-info" >修正</button>
+                                                </div>
+                                                <div class="btn-space fixd-padding-right col-md-1 col-sm-2 col-xs-12">
+                                                    <button onclick="NOTICEMANAGEMENT.delQuestion(this)" type="button" class="btn btn-success col-md-12 col-sm-12 col-xs-12 pull-right" >削除</button>
+                                                </div>
+                                                <div class="btn-space col-md-2 col-sm-3 col-xs-12 ">
+                                                    <select onchange="NOTICEMANAGEMENT.addNewQuestion(this)" class="form-control btn btn-success">
+                                                        <option disabled="" selected="" hidden="" value="0">新質問追加</option>
+                                                        <option class="type-bg-white" value="1">選択式</option>
+                                                        <option class="type-bg-white" value="2">自由記入式</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-offset-2">
+                                                <div class="errorHidden btn-space col-md-7 col-sm-12 col-xs-12">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="edit questionRow">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="row">
+                                            <h5 class="col-md-2 col-sm-2 col-xs-12">質問<span class="index">2</span></h5>
+                                            <div class="col-md-10 col-sm-10 col-xs-12 fixd-padding-left">
+                                                <input class="questionType" value="<?php echo $question['typeQuestion']; ?>" type="hidden"/>
+                                                <textarea class="col-md-12 col-sm-12 col-xs-12" placeholder="質問を入力してください" rows="2"><?php echo $question['content']; ?></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="heighthr"></div>
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="row">
+                                            <h5 class="col-md-10 col-sm-10 col-xs-12 col-md-offset-2 col-sm-offset-2">
+                                                <label class="form-check-input">
+                                                    <?php if ($question['typeQuestion'] == '2'): ?>
+                                                    <input checked="checked" onchange="NOTICEMANAGEMENT.setMultiAnswer(this);" id="cbTypeAnswer" type="checkbox">
+                                                    <?php else: ?>
+                                                    <input onchange="NOTICEMANAGEMENT.setMultiAnswer(this);" id="cbTypeAnswer" type="checkbox">
+                                                    <?php endif ?>
+                                                    <label for="cbTypeAnswer"></label> 複数回答を許可する　※チェックボックス使用
+                                                </label>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div style="padding-left: 0" class="errorContainer col-md-offset-2 col-md-10 col-sm-12 col-xs-12"></div>
+                                    <?php foreach ($question['answers'] as $answer): ?>
+                                    <div class="answerRow col-md-12 col-sm-12 col-xs-12">
+                                        <div class="row">
+                                            <div class="answerIndex col-md-1 col-sm-1 col-xs-1 col-md-offset-1 ">⭕</div>
+                                            <div class="col-md-10 col-sm-10 col-xs-10 none-distance">
+                                                <input class="answerInput col-md-10 col-sm-10 col-xs-10" value="<?php echo $answer['content']; ?>" placeholder="回答を入力してください"/>
+						<div class="controlButton col-md-1 col-sm-1 col-xs-2">
+                                                    <a class="addAnswer" href="javascript:void(0)" onclick="NOTICEMANAGEMENT.addAnswer(this)"><span class=" glyphicon glyphicon-plus add"></span></a>
+                                                    <a class="remove" href="javascript:void(0)" onclick="NOTICEMANAGEMENT.removeAnswer(this)"><span class="pull-right glyphicon glyphicon-minus remove"></span></a>
+						</div>
+                                            </div>
+                                        </div>
+                                    </div>    
+                                    <?php endforeach ?>
+                                    <div class="col-md-10 col-sm-10 col-xs-12 pull-right">
+                                        <div class="row">
+                                            <div class="col-md-2 col-md-offset-8 col-sm-4 col-xs-12 fixd-padding-right">
+                                                <button onclick="NOTICEMANAGEMENT.cancelSaveQuestion(this)" type="button" name="type-question" class="btn btn-space btn-default col-md-11 col-sm-12 col-xs-12 pull-right" >キャンセル</button>
+                                            </div>
+                                            <div class="col-md-2 col-sm-4 col-xs-12">
+                                                <button onclick="NOTICEMANAGEMENT.saveQuestion(this)" name="type-question" type="button"  class="btn btn-space btn-primary col-md-12 col-sm-12 col-xs-12 pull-right" >保存</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php } ?>
+                        <?php endforeach ?>
+                        </div>
+                        <br/>
+                        <div class="heighthr"></div>
+                        <div class="form-group" style="margin-bottom:0">
+                            <h5 class="col-md-2 col-sm-2">公開期間</h5>
+                            <div id="datepicker" class="none-padding-left col-md-2 col-sm-4 col-xs-12 input-group date">
+                                <input readonly="true" name="noticeFirstPublicDate" value="<?php echo $noticeInfo['firstPublicDate']; ?>" type="text" class="noticeFirstPublicDate form-control" data-date-format="yyyy-mm-dd ">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-12 text-center ">
+                                <h5>
+                                    ~
+                                </h5>
+                            </div>
+                            <div id="datepicker1" class="none-padding-left col-md-2 col-sm-4 col-xs-12 input-group date">
+                                <input readonly="true" name="noticeLastPublicDate" value="<?php echo $noticeInfo['lastPublicDate']; ?>" type="text" class="noticeLastPublicDate form-control" data-date-format="yyyy-mm-dd ">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h5 class="col-md-2 col-sm-2"></h5>
+                            <div id="error1" class="none-padding-left col-md-2 col-sm-4 col-xs-12 input-group date">
+                                
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-12 text-center ">
+                                
+                            </div>
+                            <div id="error2" class="none-padding-left col-md-2 col-sm-4 col-xs-12 input-group date">
+                                
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-md-offset-8 col-sm-4 col-xs-12">
+                                <button type="button" onClick="location.assign('<?php echo $this->url('notice-management/default', array('action'=>'index'))?>')" class="btn btn-space col-sm-12 col-sm-12 col-xs-12 btn-default">戻る</button>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-xs-12">
+                                <button type="button" onclick="NOTICEMANAGEMENT.ajaxSubmitForm('survey')" class="btn btn-space btn-primary col-md-12 col-sm-12 col-xs-12 pull-right">登録</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        NOTICEMANAGEMENT.init();
+        NOTICEMANAGEMENT.resetIndex();
+    })
+</script>

@@ -1,0 +1,132 @@
+<div class="container content-medium-wrapper container-body">
+	<div class="box-header">
+		<h4>
+			<b>【○○○事業についてのアンケート】</b>
+		</h4>
+	</div>
+	<div class="panel-body">
+		<div class="row">
+			<div class="title"></div>
+			<div id="surveyNotice" class="col-sm-12">
+				<form id="" class="form-horizontal">
+					<?php if(!empty($questions) && is_array($questions)):?>
+					<?php foreach($questions as $key =>$value):?>
+						<?php if($value['typeQuestion'] == 1):?>
+						<div class="form-group">
+							<label class="col-sm-12 col-xs-12 text-left"> Ｑ<?php echo $key +1 ;?>．<?php echo $value['content'];?>。
+							</label>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-12 col-xs-12">
+								<?php foreach($value['answers'] as $k => $v ):?>
+								<label class="row col-md-2 col-sm-5 col-xs-12 form-check-input">
+									<input type="radio" name="question_<?php echo $value['id']?>"
+									id="<?php echo $value['id']?>_<?php echo $k?>" value="<?php echo $v['content']?>" /> <label
+									for="<?php echo $value['id']?>_<?php echo $k?>"></label> <?php echo $v['content']?>
+								</label>
+								<?php endforeach;?>
+							</div>
+						</div>
+						<?php elseif ($value['typeQuestion'] == 0):?>
+						<div class="form-group">
+							<label class="col-sm-12 col-xs-12 text-left"> Ｑ<?php echo $key +1 ;?>．<?php echo $value['content'];?>。
+							</label>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-12 col-xs-12">
+								<textarea rows="4" id="question_<?php echo $value['id']?>" data-id="<?php echo $value['id']?>" class="form-control col-sm-12 col-xs-12"> </textarea>
+							</div>
+						</div>
+						<?php endif;?>
+					<?php endforeach;?>
+					<?php endif;?>
+				</form>
+
+				<div class="row">
+					<nav class="text-center">
+						<?php if($totalResults > 0):?>
+							<div class="row">総件数 <?php echo $totalResults;?> 件 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <?php echo (($page -1) * $resultPerPage + 1);?> 件から <?php echo($page -1) * $resultPerPage + $numQuestionsPage;?> 件を表示</div>
+						<?php endif;?>
+						<?php echo $this->partial('application/home/partial-paging.phtml', array(
+								'totalResults' => $totalResults,
+								'resultPerPage' => $resultPerPage,
+								'totalPages' => $totalPages,
+								'page' => $page,
+								'urlPaging' => ''
+						) )?>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<div>
+			<a href="/policy/detail/<?php echo $policyId?>"
+				class="btn btn-space btn-default  col-sm-2 col-xs-12 pull-left"> 戻る
+			</a>
+			<button type=button data-toggle="modal" data-target="#pleaseWaitDialog"
+				class="btn btn-space btn-primary col-sm-2 col-xs-12 pull-right" <?php if($totalResults <= 0):?> disabled <?php endif;?>>回答</button>
+		</div>
+	</div>
+</div>
+<div class="modal fade dialog-position" id="pleaseWaitDialog" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="id-name">ID: 2-3-2</h4>
+			</div>
+			<div class="modal-body">
+				<p id="vote_confirm"><?php echo $this->translate('MSG_SV_001_ConfirmSurveyVote')?></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default pull-left"
+					data-dismiss="modal">キャンセル</button>
+				<button type="button" class="btn btn-primary requestVote">確認</button>
+			</div>
+		</div>
+
+	</div>
+</div>
+<div class="modal fade dialog-position" id="pleaseWaitDialogFail" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="id-name">ID: 2-3-2</h4>
+			</div>
+			<div class="modal-body">
+				<p id="vote_confirm"><?php echo $this->translate('MSG_SV_004_ConfirmVoteFail')?></p>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade dialog-position" id="dialogSucceed" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="id-name">ID: 2-3-3</h4>
+				<h4 class="modal-title"><?php echo $this->translate('MSG_SV_002_SuccessSurveyVote')?></h4>
+			</div>
+			<div class="modal-body"><?php echo $this->translate('MSG_SV_003_ThankSurveyVote')?></div>
+			<div class="modal-footer">
+				<a class="btn btn-primary" href = "/policy/detail/<?php echo $policyId?>" >完了</a>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="<?php echo $this->basePath();?>/js/survey/survey.js"></script>
+<script>
+    $(document).ready(function () {
+        SURVEY.surveyId = <?php echo isset($surveyId)? $surveyId : 0 ?>;
+    	SURVEY.policyId = <?php echo $policyId?>;
+    	SURVEY.listQId = <?php echo isset($listQId)? $listQId : null ?>;
+    	SURVEY.totalQ = <?php echo isset($totalResults)? $totalResults : 0 ?>;
+    	SURVEY.inputChecked();
+    	SURVEY.addlistQId();
+    	SURVEY.requestVote();
+    });
+</script>

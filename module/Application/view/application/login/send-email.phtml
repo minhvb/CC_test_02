@@ -1,0 +1,21 @@
+<div class="container content-wrapper container-body">
+    <div class="box-header"><?php echo $this->translate('MSG_LG_015_ForgotPasswordTitle'); ?></div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="title"></div>
+            <div class="col-sm-12">
+                <span><?php echo $this->translate('MSG_LG_016_ConfirmSendEmail'); ?></span>
+            </div>
+            <div class="col-sm-12">
+                <?php
+                $query = empty($ref) ? array() : array('role' => $ref)
+                ?>
+                <a href="<?php echo $this->url('login/role', $query); ?>">
+                    <button class="btn btn-primary col-md-2 pull-right">
+                        <?php echo $this->translate('MSG_AP_004_FinishLabel'); ?>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

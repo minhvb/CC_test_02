@@ -1,0 +1,165 @@
+<div class="container">
+            <div class="container-body">
+                <div class="row">
+                    <div class="col-sm-12 col-xs-12">
+                        <div class="box-header">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6 col-xm-12">
+                                    <h3>
+                                        <b> お知らせ一覧</b>
+                                    </h3>
+                                </div>
+
+                                <div class="col-md-2 col-sm-2 col-xm-12 pull-right text-right   ">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-data">
+                            <div class="row">
+                                <div class="col-md-1 col-sm-3">
+                                    <h5>
+                                        ワード
+                                    </h5>
+                                </div>
+                                <div class="none-padding-left col-md-5 col-sm-9">
+                                    <input class="form-control" />
+                                </div>
+                                <div class="col-md-1 col-sm-3 col-xs-4 col-md-offset-1 col-sm-offset-3 none-padding-left btn-space">
+                                    <label class="form-check-input">
+                                        <input type="checkbox" name="selectdata" />公開待ち
+                                    </label>
+                                </div>
+                                <div class="col-md-1 col-sm-3 col-xs-4 btn-space">
+                                    <label class="form-check-input">
+                                        <input type="checkbox" name="selectdata" />公開中
+                                    </label>
+                                </div>
+                                <div class="col-md-1 col-sm-3 col-xs-4 btn-space">
+                                    <label class="form-check-input">
+                                        <input type="checkbox" name="selectdata" />非公開
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1 col-sm-3">
+                                    <h5>
+                                    実施期間
+                                    </h5>
+                                </div>
+
+                                <div class="col-md-3 col-sm-4">
+                                    <div class="row">
+                                        <div class="start-group btn-space input-group date ">
+                                            <input id="datepicker" type="text" class="form-control inputTimeNew" data-date-format="yyyy-mm-dd " />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 col-sm-1 text-center">
+                                    ～
+                                </div>
+                                <div class="col-md-3 col-sm-4">
+                                    <div class="row">
+                                        <div class="start-group btn-space input-group date ">
+                                            <input id="datepicker1" type="text" class="form-control inputTimeNew" data-date-format="yyyy-mm-dd " />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-xs-12 pull-right ">
+                                    <button type="button" class="btn btn-space col-md-12 col-sm-12 col-xs-12 btn-success pull-right">絞り込み</button>
+                                </div>
+                            </div>
+                            <div class="heighthr"></div>
+                            <div id="toolBar" class="row">
+                                <div class="col-md-4 col-sm-12 col-xs-12 text-center none-padding-left">
+                                    <div class="col-md-12 col-sm-12 col-xs-12"><h5>総件数〇〇件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;〇件から〇件を表示</h5></div>
+                                    <ul class="pagination btn-space">
+                                        <li><a href="javascript:void(0)">&lt;&lt;</a></li><li><a href="javascript:void(0)">&lt;</a></li><li class="active"><a href="javascript:void(0)">1</a></li><li><a href="javascript:void(0)">2</a></li><li><a href="javascript:void(0)">3</a></li><li><a href="javascript:void(0)">4</a></li><li><a href="javascript:void(0)">5</a></li><li><a href="javascript:void(0)">&gt;</a></li><li><a href="javascript:void(0)">&gt;&gt;</a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-4 col-sm-12 col-xs-12">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                            <h5>チェックされた行を</h5>
+                                        </div>
+                                        <div class="col-md-4 col-sm-6 col-md-offset-2">
+                                            <button type="button" onclick="confirm_double('公開確認画面','ID: 13-4-1','公開等完了画面','ID: 13-4-2','はい','いいえ')" class="btn btn-space btsn-warning col-md-12 col-sm-12 col-xs-12">公開</button>
+                                        </div>
+                                        <div class="col-md-4 col-sm-6">
+                                            <button type="button" onclick="confirm_double('非公開確認画面','ID: 13-4-1','非公開完了画面','ID: 13-4-2','はい','いいえ')" class="btn btn-space btn-warning col-md-12 col-sm-12 col-xs-12">非公開</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-12 col-xs-12 pull-right">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                            <h5><br/></h5>
+                                        </div>
+                                        <div class="col-md-5 col-sm-6 col-xs-12">
+                                            <button type="button" onclick="location.href = 'notice-module-13-1-1-edit-notice.html'" class="btn btn-space btn-primary pull-right col-md-12 col-sm-12 col-xs-12">新規作成（一般）</button>
+                                        </div>
+                                        <div class="col-md-7 col-sm-6 col-xs-12" >
+                                            <button type="button" onclick="location.href = 'notice-module-13-1-2-add-notice.html'" class="btn btn-space btn-primary pull-right col-md-12 col-sm-12 col-xs-12">新規作成（アンケート）</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="heighthr"></div>
+                            <table id="table1" class="table tab-content table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">
+                                            <input id="checkAll" onchange="COMMON.checkAll(this)" type="checkbox" value="" />
+                                            <label for="checkAll"></label>
+                                        </th>
+                                        <th class="text-center">NO</th>
+                                        <th>お知らせ名称</th>
+                                        <th class="col-md-1">種類</th>
+                                        <td>実施期間</td>
+                                        <th class="col-md-2">更新日 </th>
+                                        <th class="col-md-1">ステータス</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($noticeList as $notice): ?>
+                                    <tr>
+                                        <td class="text-center">
+                                            <input id="<?php echo $notice['id']; ?>" type="checkbox" name="rowTab1[]" value="<?php echo $notice['id']; ?>" />
+                                            <label for="<?php echo $notice['id']; ?>"></label>
+                                        </td>
+                                        <td class="text-center">1</td>
+                                        <td>
+                                            <?php echo $notice['title']; ?>
+                                        </td>
+                                        <td><?php echo ($notice['type'])?'アンケート':'お知らせ'; ?></td>
+                                        <td><?php echo date("Y/m/d",$notice['firstPublicDate']) . ' ～ ' . date("Y/m/d",$notice['lastPublicDate']);?></td>
+                                        <td><?php echo date("Y/m/d H:i",$notice['updateDate']) ?></td>
+                                        <td>公開中</td>
+                                    </tr>   
+                                    <?php endforeach ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<script>
+    $( document ).ready(function() {
+        currentDate = new Date();
+        $('#datepicker').datepicker({format: 'yyyy-mm-dd'}).datepicker("setDate", currentDate);
+        $('#datepicker1').datepicker({format: 'yyyy-mm-dd'});
+        $("#table1 > tbody > tr").click( function(){
+            $(this).find('input[name="rowTab1[]"]').click();
+        });
+        $('input[name="rowTab1[]"]').click( function(){
+            $(this).click();
+        });
+    });
+</script>

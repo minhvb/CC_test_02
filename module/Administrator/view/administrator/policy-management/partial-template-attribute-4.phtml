@@ -1,0 +1,46 @@
+<?php
+$firstArray = array_slice($attribute, 0, 9);
+$lastArray = array_slice($attribute, 9, 2);
+?>
+<div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label"><?php echo $attrPolicyType['value'] ?>
+        <?php if (!isset($removeRequireFlag) || $removeRequireFlag != 1) {
+            if (isset($attrPolicyType['required']) && $attrPolicyType['required'] == 1) {
+                ?>
+                <span class="flag-notice"> (*)</span>
+            <?php }
+        }?>
+    </label>
+    <div class="col-sm-10 col-xs-12 box-text box-attributes"
+         data-id="<?php echo isset($attrPolicyTypeId) ? $attrPolicyTypeId : '' ?>">
+        <div class="row">
+            <?php foreach ($firstArray as $key => $value) { ?>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <label class="form-check-input">
+                        <input class="attributes" id="attributes_<?php echo $value['id'] ?>"
+                               name="attributes[<?php echo isset($attrPolicyTypeId) ? $attrPolicyTypeId : '' ?>][]"
+                               type="checkbox" <?php echo isset($attributesPolicy) && in_array($value['id'], $attributesPolicy) ? 'checked' : ''; ?>
+                               value="<?php echo $value['id'] ?>"/><label
+                                for="<?php echo 'attributes_' . $value['id'] ?>"></label> <?php echo $value['value'] ?>　
+                    </label>
+                </div>
+            <?php } ?>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <label class="form-check-input">
+                    <br>
+                </label>
+            </div>
+            <?php foreach ($lastArray as $key => $value) { ?>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <label class="form-check-input">
+                        <input class="attributes" id="attributes_<?php echo $value['id'] ?>"
+                               name="attributes[<?php echo isset($attrPolicyTypeId) ? $attrPolicyTypeId : '' ?>][]"
+                               type="checkbox" <?php echo isset($attributesPolicy) && in_array($value['id'], $attributesPolicy) ? 'checked' : ''; ?>
+                               value="<?php echo $value['id'] ?>"/><label
+                                for="<?php echo 'attributes_' . $value['id'] ?>"></label> <?php echo $value['value'] ?>　
+                    </label>
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+</div>

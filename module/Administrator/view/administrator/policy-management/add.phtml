@@ -1,0 +1,295 @@
+<?php
+$datetime = new \DateTime('now');
+$isRoleUserAdmin = \Application\Utils\UserHelper::isAdministrator($this->userInfo['roleId']);
+?>
+<div class="container-body">
+    <div class="box-header">
+        <div class="row">
+            <div class="col-md-8 col-sm-8 col-xm-12">
+                <h4>
+                    <b>施策情報の新規作成</b>
+                </h4>
+            </div>
+
+            <div class="col-md-4 col-sm-4 col-xm-12 pull-right text-right">
+            </div>
+        </div>
+    </div>
+    <form id="form-input-policy" method="POST" enctype="multipart/form-data"
+          action="<?php echo $this->url('policy-management/default', array('action' => 'save')) ?>">
+        <div class="panel-body" style="padding-right: 15px;">
+            <div class="row">
+                <div class="title"></div>
+                <div class="col-sm-12">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-12 col-xs-12 text-left flag-notice" id="errors-list">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label">入力所管部署<span
+                                        class="flag-notice"> (*)</span></label>
+                            <div class="col-md-10 col-sm-10 col-xs-12 none-distance">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4">
+                                        <select class="form-control btn-space" id="ddlBureauId"
+                                                name="ddlBureauId" <?php echo $isDisable == 1 ? 'disabled="disabled"' : ''; ?>>
+                                            <option value=""><h5>-- 所属団体 --</h5></option>
+                                            <?php foreach ($glConfig['bureauId'] as $key => $value) { ?>
+                                                <option value="<?php echo $key; ?>" <?php echo $this->userInfo['bureauId'] == $key && $isDisable == 1 ? 'selected' : ''; ?>><?php echo $value; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <select class="form-control btn-space" id="ddlDepartmentId"
+                                                name="ddlDepartmentId" <?php echo $isDisable == 1 ? 'disabled="disabled"' : ''; ?>>
+                                            <option value="">--部 --</option>
+                                            <?php foreach ($glConfig['departmentId'] as $key => $value) { ?>
+                                                <option name="<?php echo $value['parentId'] ?>"
+                                                        value="<?php echo $key; ?>" <?php echo $this->userInfo['departmentId'] == $key && $isDisable == 1 ? 'selected' : ''; ?>><?php echo $value['value'] ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <select class="form-control btn-space" id="ddlDivisionId"
+                                                name="ddlDivisionId" <?php echo $isDisable == 1 && !empty($this->userInfo['divisionId']) ? 'disabled="disabled"' : ''; ?>>
+                                            <option value="">-- 課 --</option>
+                                            <?php foreach ($glConfig['divisionId'] as $key => $value) {
+                                                if ($value['value'] != '') {
+                                                    ?>
+                                                    <option name="<?php echo $value['parentId'] ?>"
+                                                            value="<?php echo $value['code']; ?>" <?php echo $value['parentId'] == 'departmentId' . $this->userInfo['departmentId'] && $this->userInfo['divisionId'] == $value['code'] && $isDisable == 1 ? 'selected' : ''; ?>><?php echo $value['value'] ?></option>
+                                                <?php }
+                                            } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label">施策略称<span
+                                        class="flag-notice"> (*)</span></label>
+                            <div class="col-sm-10 col-xs-12 none-distance ">
+                                <input type="content" class="form-control" id="txtShortName" name="txtShortName"
+                                       placeholder="施策略称">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label">施策名称<span
+                                        class="flag-notice"> (*)</span></label>
+                            <div class="col-sm-10 col-xs-12 none-distance btn-space">
+                                <input type="content" class="form-control" id="txtName" name="txtName"
+                                       placeholder="施策名称">
+                            </div>
+                        </div>
+                        <?php foreach ($glConfig['attributePolicyType'] as $key => $values) {
+                            if (isset($values['displayCreate']) && $values['displayCreate'] == 1) {
+                                echo $this->partial('partial-template-attribute-' . $values['templateCreate'] . '.phtml', array(
+                                    'attrPolicyType' => $values,
+                                    'attribute' => isset($attributes[$key]) ? $attributes[$key] : array(),
+                                    'attrPolicyTypeId' => $key
+                                ));
+                            }
+                            ?>
+                        <?php } ?>
+                        <div class="form-group" style="margin-bottom: 0px">
+                            <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label">募集（実施）期間</label>
+                            <div class="col-md-6 none-distance">
+                                <label class="form-check-input">
+                                    <input name="cbRecruitmentFlag" value="1"
+                                           onchange="POLICY.checkRecruitmentTime()"
+                                           type="checkbox"
+                                           id="cbRecruitmentFlag" data-toggle="toggle"/><label
+                                            for="cbRecruitmentFlag"></label>&nbsp;随時
+                                </label>
+                            </div>
+                        </div>
+                        <div id="box-recruitment-time" class="form-horizontal">
+                            <div class="form-group">
+                                <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label"></label>
+                                <h5 id="label-startDate" for="inputPassword3" class="col-sm-3 col-xs-12 text-center">
+                                    募集（実施）開始日 </h5>
+                                <h5 id="label-endDate" for="inputPassword3" class="col-sm-3 col-xs-12 text-center">
+                                    募集（実施）終了日</h5>
+                                <h5 id="label-deadline" for="inputPassword3" class="col-sm-3 col-xs-12 text-center ">
+                                    募集打切日</h5>
+                            </div>
+                            <?php for ($i = 0; $i < 5; $i++) {
+                                echo $this->partial('partial-template-recruitment-time.phtml', array(
+                                    'key' => $i + 1,
+                                ));
+                            } ?>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12 col-xs-12 none-distance">
+                                <h5 class="pull-right">※入力枠は文字に従い、縦方向に拡がります。</h5>
+                            </div>
+                        </div>
+                        <?php foreach ($glConfig['attributePolicyType'] as $key => $values) {
+                            if (isset($values['displayCreate']) && $values['displayCreate'] == 2) {
+                                echo $this->partial('partial-template-attribute-' . $values['templateCreate'] . '.phtml', array(
+                                    'attrPolicyType' => $values,
+                                    'attribute' => isset($attributes[$key]) ? $attributes[$key] : array(),
+                                    'attrPolicyTypeId' => $key
+                                ));
+                            }
+                            ?>
+                        <?php } ?>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label">目的<span
+                                        class="flag-notice"> (*)</span></label>
+                            <div class="col-sm-10 col-xs-12 none-distance">
+                        <textarea rows="3" onkeyup="COMMON.textAreaAdjust(this,74)" style="overflow:hidden"
+                                  type="content"
+                                  class="form-control textarea" id="txtPurpose" name="txtPurpose"
+                                  placeholder="目的"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label">対象者の詳細<span
+                                        class="flag-notice"> (*)</span></label>
+                            <div class="col-sm-10 col-xs-12 none-distance">
+                        <textarea rows="3" onkeyup="COMMON.textAreaAdjust(this,74)" style="overflow:hidden"
+                                  type="content"
+                                  class="form-control textarea" id="txtDetailOfSupportArea"
+                                  name="txtDetailOfSupportArea" placeholder="対象者の詳細"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label">施策内容<span
+                                        class="flag-notice"> (*)</span></label>
+                            <div class="col-sm-10 col-xs-12 none-distance">
+                        <textarea rows="5" onkeyup="COMMON.textAreaAdjust(this,74)" style="overflow:hidden"
+                                  type="content"
+                                  class="form-control textarea" id="txtContent" name="txtContent"
+                                  placeholder="施策内容"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label">募集（実施）期間の詳細</label>
+                            <div class="col-sm-10 col-xs-12 none-distance">
+                        <textarea rows="3" onkeyup="COMMON.textAreaAdjust(this,74)" style="overflow:hidden"
+                                  type="content"
+                                  class="form-control textarea" id="txtDetailRecruitmentTime"
+                                  name="txtDetailRecruitmentTime"
+                                  placeholder="募集（実施）期間の詳細"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label">チラシ・パンフレット</label>
+                            <div class="col-sm-10 col-xs-12 none-distance">
+                                <input style="height: auto;" name="pdfFile[]" type="file" multiple="multiple"
+                                       class="form-control textarea"
+                                       placeholder="チラシ・パンフレット">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label">ホームページ<span
+                                        class="flag-notice"> (*)</span></label>
+                            <div class="col-sm-10 col-xs-12 none-distance">
+                                <input type="texxt" class="form-control textarea" id="txtHomepage" name="txtHomepage"
+                                       placeholder="ホームページ">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label">問い合わせ先<span
+                                        class="flag-notice"> (*)</span></label>
+                            <div class="col-sm-10 col-xs-12 none-distance">
+                        <textarea rows="3" onkeyup="COMMON.textAreaAdjust(this,74)" style="overflow:hidden"
+                                  type="content"
+                                  class="form-control textarea" id="txtContact" name="txtContact"
+                                  placeholder="問い合わせ先"></textarea>
+                            </div>
+                        </div>
+
+
+                        <div id="pendingUpdate" class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label">本システムでの</br>
+                                公開開始日時</label>
+
+                            <div class="col-sm-3 col-xs-12 input-group date publishDate publishStartDate">
+
+                                <input readonly="true" type='text' class="form-control" name="datePublishStartdate"
+                                       id="datePublishStartdate"
+                                       value=""/>
+                                <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                            </div>
+                            <label for="inputPassword3"
+                                   class="col-sm-2 col-xs-12 col-sm-offset-1 control-label">本システムでの</br>
+                                公開終了日時</label>
+                            <div class="col-sm-3 col-xs-12 input-group date publishDate publishEndDate">
+                                <input readonly="true" type='text' class="form-control" name="datePublishEnddate"
+                                       id="datePublishEnddate" value=""/>
+                                <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label"></label>
+                            <div id="error-publish-start-date" class="col-sm-3 col-xs-12 input-group date"></div>
+                            <label for="inputPassword3"
+                                   class="col-sm-2 col-xs-12 col-sm-offset-1 control-label"></label>
+                            <div id="error-publish-end-date" class="col-sm-3 col-xs-12 input-group date"></div>
+                        </div>
+                        <?php if ($isRoleUserAdmin) { ?>
+                            <div class="form-group">
+                                <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label"></label>
+                                <div class="col-md-4 col-sm-4 none-distance">
+                                    <label class="form-check-input ">
+                                        <input id="cbAttentionFlag" name="cbAttentionFlag" value="1" type="checkbox"/>
+                                        <label for="cbAttentionFlag"></label>
+                                        注目フラグ　
+                                    </label>
+                                </div>
+                            </div>
+                        <?php } ?>
+                        <div class="form-group" style="margin-bottom: 0px;">
+                            <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label"></label>
+                            <div class="col-md-4 col-sm-4 none-distance">
+                                <label class="form-check-input">
+                                    <input id="cbEmailNotificationFlag" name="cbEmailNotificationFlag" value="1"
+                                           type="checkbox" checked/>
+                                    <label for="cbEmailNotificationFlag"></label>
+                                    メール通知　
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 col-xs-12 control-label"></label>
+                            <div class="col-md-10 col-sm-10 none-distance">
+                                ※チェックされていると、利用者に施策情報の更新があったことがメール通知されます。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="heighthr"></div>
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <button id="btnBack" type="button" onclick="POLICY.redirectToUrl('<?php echo $refererUrl; ?>');"
+                        class="btn btn-space btn-default col-sm-3 col-xs-12 col-sm-offset-1">戻る
+                </button>
+                <button id="btnSubmit" type="submit"
+                        class="btn btn-space btn-primary col-sm-3 col-xs-12 col-sm-offset-1 col-xs-offset-1 pull-right">
+                    登録
+                </button>
+                <button id="btnDraft" type="submit" class="btn btn-space btn-success col-sm-3 col-xs-12 pull-right">一時保存
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript"
+        src="<?php echo $this->basePath(); ?>/js/policy/policy.js?v=<?php echo \Application\Utils\ApplicationConst::VERSION_STATIC_SOURCE; ?>"></script>
+<script>
+    $(document).ready(function () {
+        POLICY.messageList = <?php echo json_encode($messages);?>;
+        POLICY.initAdd();
+    });
+</script>

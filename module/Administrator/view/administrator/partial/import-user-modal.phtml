@@ -1,0 +1,128 @@
+<div id="importUserModal" class="modal fade dialog-position" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form action="<?php echo $this->url('administrator/default', array('controller' => 'user-management', 'action' => 'import-user')); ?>" method="POST" id="import-user-form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">ユーザーアップロード</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="control-label">CSVファイルを選択ください</label>
+                            <label style="width: 100%;" id="filenameLable">
+                                <input type="file" id="filename" name="filename" class="file" data-show-preview="false" style="display: none;" />  
+                            </label> 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+                    <button type="submit" class="btn btn-primary" >アップロード</button>                    
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    var data;
+    $(function(){
+        $("#filename").fileinput({
+              
+        }).on('fileerror', function(event, data){
+            $('#filename').val("").fileinput("refresh");
+            $('#importUserModal').modal('hide');
+                         
+            $('#importUserErrorModal .error-message').html('<?php echo $this->translate("MSG_UM_036_FileSelectedIsZeroByte");?>'); 
+            $('#importUserErrorModal').modal({backdrop: 'static'});
+        });
+    
+        $('#importUserConfirmModal .btnCancel').click(function(){
+            $('#importUserConfirmModal').modal('hide');            
+        });
+        
+        $('#importUserConfirmModal .btnBack').click(function(){
+            $('#importUserConfirmModal').modal('hide');
+            
+            $("#filename").val("");        
+            $('#importUserModal').modal({backdrop: 'static'});            
+        });
+        
+        $('#importUserErrorModal .btnCancel').click(function(){
+            $('#importUserErrorModal').modal('hide');            
+        });
+        
+        $('#importUserErrorModal .btnBack').click(function(){
+            $('#importUserErrorModal').modal('hide');
+            
+            $("#filename").val("");            
+            $('#importUserModal').modal({backdrop: 'static'});            
+        });
+        
+        $('#importUserConfirmModal .btnSave').click(function(){
+            var url = '<?php echo $this->url('administrator/default', array('controller' => 'user-management', 'action' => 'import-user-proceed')); ?>';
+            $.ajax({
+                dataType: 'json',
+                type: "POST",
+                url: url,
+                data: {            
+                    data:data                                                
+                },
+                success: function(response){
+                    if(response.status==true){                        
+                        location.reload();
+                    } else {
+                        $('#importUserConfirmModal').modal('hide');
+                         
+                        $('#importUserErrorModal .error-message').html(response.message); 
+                        $('#importUserErrorModal').modal({backdrop: 'static'});
+                    }
+                },
+                error: function(){}
+            });
+        });
+        
+        // Register a 'submit' event listener on the form to perform the AJAX POST
+        $('#import-user-form').on('submit', function (e) {
+           
+            e.preventDefault();
+            if ($('#filename').val() == '') {
+                $('#importUserModal').modal('hide');
+                         
+                $('#importUserErrorModal .error-message').html('<?php echo $this->translate("MSG_UM_035_NotSelectedFile");?>'); 
+                $('#importUserErrorModal').modal({backdrop: 'static'});
+                return false;
+            }
+            
+            $(this).ajaxSubmit({
+                dataType: 'json',
+                beforeSubmit: function (arr, $form, options) {                    
+                    
+                },
+                success: function (response, statusText, xhr, $form) {
+                    if (response.status) {
+                        /* set value of data param global */
+                        data = response.data;
+                        
+                        $('#importUserModal').modal('hide');
+                                                
+                        $('#importUserConfirmModal .total_insert').html(response.totalInsert);
+                        $('#importUserConfirmModal .total_delete').html(response.totalDelete);
+                        $('#importUserConfirmModal').modal({backdrop: 'static'});                        
+                    } else {                        
+                         $('#importUserModal').modal('hide');
+                         
+                         $('#importUserErrorModal .error-message').html(response.message); 
+                         $('#importUserErrorModal').modal({backdrop: 'static'});
+                    }                             
+                },
+                error: function (response, statusText, code) {}
+            });
+        }); 
+    });
+</script>

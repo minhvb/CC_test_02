@@ -1,0 +1,128 @@
+<div class="container">
+    <div class="container content-medium-wrapper container-body">
+        <div class="box-header">
+            <h4><b><?php echo $this->translate('MSG_NO_002_SurveyQuestion'); ?></b></h4>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="title"></div>
+                <div id="surveyNotice" class="col-sm-12">
+                    <form id="surveyForm" class="form-horizontal" method="post" action="/notification/save">
+                        <div class="form-group">
+                            <div class="col-sm-12 col-xs-12">
+                                <input name="surveyId" type="hidden" value="<?php echo $noticeInfo['surveyId']; ?>">
+                                <input name="noticeId" type="hidden" value="<?php echo $noticeId; ?>">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12 col-xs-12">
+                                <?php echo $noticeInfo['description']; ?>
+                            </div>
+                        </div>
+                        <?php foreach ($noticeInfo['questions'] as $Qkey => $question): ?>
+                        <div class="form-group">
+                            <label for="input" class="col-sm-12 col-xs-12 text-left">
+                                Ｑ<?php echo ($Qkey + 1) + ($page - 1) * $resultPerPage . '. ' . $question['content']; ?>
+                            </label>
+                        </div>   
+                        <div class="form-group">
+                            <div class="col-sm-12 col-xs-12">
+                            <?php if ($question['typeQuestion'] == '1') { ?>
+                                <?php foreach ($question['answers'] as $Akey => $answer): ?>
+                                <?php if (count($question['answers']) == 6): ?>
+                                <label class="row col-md-4 col-sm-5 col-xs-12 form-check-input">   
+                                <?php else: ?>
+                                <label class="row col-md-2 col-sm-5 col-xs-12 form-check-input">
+                                <?php endif; ?>
+                                    <input data-id="<?php echo $question['questionId']; ?>" class="test" id="<?php echo 'answer_' . $Qkey . '_' . $Akey; ?>" type="radio" name="<?php echo 'answer[' . $question['questionId'] . ']'; ?>" value="<?php echo $answer['answerId']; ?>" />
+                                    <label for="<?php echo 'answer_' . $Qkey . '_' . $Akey; ?>"></label>
+                                    <?php echo $answer['content']; ?>
+                                </label>    
+                                <?php endforeach ?>
+                            <?php } elseif ($question['typeQuestion'] == '2') { ?>
+                                <?php foreach ($question['answers'] as $Akey => $answer): ?>
+                                <label class="row col-md-2 col-sm-5 col-xs-12 form-check-input">
+                                    <input data-id="<?php echo $question['questionId']; ?>" class="test" id="<?php echo 'answer_' . $Qkey . '_' . $Akey; ?>" type="checkbox" name="<?php echo 'answer[' . $question['questionId'] . ']'; ?>" value="<?php echo $answer['answerId']; ?>" />
+                                    <label for="<?php echo 'answer_' . $Qkey . '_' . $Akey; ?>"></label>
+                                    <?php echo $answer['content']; ?>
+                                </label>    
+                                <?php endforeach ?>
+                            <?php } else { ?>
+                            <div class="form-group">
+                                <div class="col-sm-12 col-xs-12">
+                                    <textarea id="textField_<?php echo $question['questionId']; ?>" data-id="<?php echo $question['questionId']; ?>" name="answer_<?php echo $question['questionId']; ?>" rows="4" class="form-control col-sm-12" ></textarea>
+                                </div>
+                            </div>
+                            <?php } ?>
+                            </div>
+                        </div>  
+                        <?php endforeach ?>
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <div class="col-md-2 col-md-offset-8 col-sm-4 col-xs-6">
+                                    <button type="button" class="btn btn-space col-sm-12 col-xs-12 btn-default" onclick="NOTICE.closeNoticeWindow()" data-dismiss="modal"><?php echo $this->translate('MSG_NO_002_ReturnButton'); ?></button>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-xs-6">
+                                    <button type=button data-toggle="modal" data-target="#pleaseWaitDialog" class="btn btn-space btn-primary col-sm-12 col-xs-12 pull-right"><?php echo $this->translate('MSG_NO_002_SubmitAnswer'); ?></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="text-center">
+            <?php
+            echo $this->partial('application/home/partial-paging.phtml', array(
+                    'totalResults' => $totalResults,
+                    'resultPerPage' => $resultPerPage,
+                    'totalPages' => $totalPages,
+                    'page' => $page,
+                    'urlPaging' => ''
+                )
+            )
+            ?>
+            </div>
+            <input name="totalResults" type="hidden" value="<?php echo $totalResults; ?>">
+        </div>
+    </div>
+    <div class="modal fade dialog-position" id="pleaseWaitDialog" role="dialog">
+        <div class="modal-dialog modal-sm">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="id-name">ID: 2-5-1</h4>
+                </div>
+                <div class="modal-body text-center">
+                    <p><?php echo $this->translate('MSG_NO_002_SubmitConfirmation'); ?></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><?php echo $this->translate('MSG_NO_002_CancelButton'); ?></button>
+                    <button onclick="NOTICE.submitSurvey()" type="button" class="btn btn-primary" data-toggle="modal" data-target="#dialogSucceed" data-dismiss="modal"><?php echo $this->translate('MSG_NO_002_CancelButton'); ?></button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade dialog-position" id="dialogSucceed" role="dialog">
+        <div class="modal-dialog modal-sm">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="id-name">ID:2-5-2</h4>
+                    <h4 class="modal-title regCompleteTitle"><?php echo $this->translate('MSG_NO_002_SubmitComplete'); ?></h4>
+                </div>
+                <div class="modal-body regCompleteBody">
+                    <?php echo $this->translate('MSG_NO_002_RegisterCompleteMessage'); ?>
+                    <?php echo $this->translate('MSG_NO_002_ThanksMessage'); ?>
+                </div>
+                <div class="modal-footer regCompleteFooter">
+                    <button onclick="NOTICE.closeNoticeWindow()" type="submit" class="btn btn-primary" data-dismiss="modal"><?php echo $this->translate('MSG_AP_004_FinishLabel'); ?></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/notice/notice.js"></script>

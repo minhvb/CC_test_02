@@ -1,0 +1,228 @@
+<?php 
+use Application\Utils\ApplicationConst;
+use Application\Utils\DateHelper;
+?>
+<style>
+.box-text-outline {
+    background: #eeeeee;
+    padding-top: 10px;
+}
+.answerInputRow{
+	padding-top: 10px;
+}
+
+</style>
+
+<div class="container container-body">
+	<div class="box-header">アンケートの追加・修正</div>
+	<div class="panel-body">
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-mx-12 text-left">
+				<form class="form-horizontal" id="form-policy-survey" method="post" action="<?php echo $this->url('survey-management/default', array('action' => 'save')) ?>">
+					<div id="createView">
+						<?php foreach($questions as $key => $value):?>
+						<?php if(empty($value['typeQuestion'])):?>
+						<div class="form-group">
+							<div class="view" style="display: block;">
+								<div class="col-md-12">
+									<div class="heighthr"></div>
+									<div class="row">
+										<h5 class="col-md-2 col-md-12">質問<span class="index"><?php echo $key;?></span>
+										</h5>
+										<div class="col-md-10 col-sm-12 col-xs-12 none-distance">
+											<div class="btn-space col-md-7 col-sm-12 col-xs-12 box-text"><?php echo $value['content']?></div>
+											<div class="btn-space col-md-2 col-sm-3 col-xs-12 pull-right">
+												<select onchange="SURVEY_QUESTIONS.addNewQuestion(this)" class="form-control btn btn-success">
+													<option disabled="" selected="" hidden="" value="0">新質問追加</option>
+													<option class="type-bg-white" value="1">選択式</option>
+													<option class="type-bg-white" value="2">自由記入式</option>
+												</select>
+											</div>
+											<div class="btn-space fixd-padding-right col-md-1 col-sm-2 col-xs-12 pull-right">
+												<button onclick="SURVEY_QUESTIONS.delQuestion(this)" type="button"
+													class="btn btn-success col-md-12 col-sm-12 col-xs-12 pull-right">削除</button>
+											</div>
+											<div class="btn-space fixd-padding-right col-md-1 col-sm-2 col-xs-12 pull-right">
+												<button onclick="SURVEY_QUESTIONS.editQuestion(this)" type="button" name="type-not-question"
+													class="btn btn-success col-md-12 col-sm-12 col-xs-12 pull-info">修正</button>
+											</div>
+										</div>
+									</div>
+									<div class="heighthr"></div>
+								</div>
+							</div>
+							<div class="edit questionRow" style="display: none;">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="row">
+										<h5 class="col-md-2 col-sm-2 col-xs-12">
+											質問<span class="index"><?php echo $key;?></span>
+										</h5>
+										<div class="col-md-10 col-sm-10 col-xs-12">
+											<textarea name="questions[<?php echo $key;?>][content]" class="questionsTxt col-md-12 col-sm-12 col-xs-12" placeholder="質問を入力してください" rows="2" aria-required="true"><?php echo $value['content']?></textarea>
+										</div>
+									</div>
+								</div>
+								<input class="typeQuestion" name="questions[<?php echo $key;?>][typeQuestion]" value="0" type="hidden">
+								<div class="col-md-10 col-sm-10 col-xs-12 pull-right">
+									<div class="row">
+										<div class="col-md-2 col-sm-4 col-xs-12 pull-right">
+											<button onclick="SURVEY_QUESTIONS.save(this)" name="type-not-question" type="button"
+												class="btn btn-space btn-primary col-md-12 col-sm-12 col-xs-12 pull-right">保存</button>
+										</div>
+										<div class="col-md-2 col-sm-4 col-xs-12 pull-right">
+											<button onclick="SURVEY_QUESTIONS.cancelSave(this)" name="type-not-question" type="button"
+												class="btn btn-space btn-default col-md-12 col-sm-12 col-xs-12 pull-right">キャンセル</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<?php elseif(!empty($value['typeQuestion'])):?>
+						<div class="form-group">
+							<div class="view" style="display: block;">
+								<div class="col-md-12">
+									<div class="heighthr"></div>
+									<div class="row">
+										<h5 class="col-md-2 col-md-12">
+											質問<span class="index"><?php echo $key;?></span>
+										</h5>
+										<div class="col-md-10 col-sm-12 col-xs-12 none-distance">
+											<div class="btn-space col-md-7 col-sm-12 col-xs-12 box-text"><?php echo $value['content']?></div>
+											<div class="btn-space col-md-2 col-sm-3 col-xs-12 pull-right">
+												<select onchange="SURVEY_QUESTIONS.addNewQuestion(this)" class="form-control btn btn-success">
+													<option disabled="" selected="" hidden="" value="0">新質問追加</option>
+													<option class="type-bg-white" value="1">選択式</option>
+													<option class="type-bg-white" value="2">自由記入式</option>
+												</select>
+											</div>
+											<div
+												class="btn-space fixd-padding-right col-md-1 col-sm-2 col-xs-12 pull-right">
+												<button onclick="SURVEY_QUESTIONS.delQuestion(this)" type="button"
+													class="btn btn-success col-md-12 col-sm-12 col-xs-12 pull-right">削除</button>
+											</div>
+											<div class="btn-space fixd-padding-right col-md-1 col-sm-2 col-xs-12 pull-right">
+												<button onclick="SURVEY_QUESTIONS.editQuestion(this)" type="button" name="type-not-question"
+													class="btn btn-success col-md-12 col-sm-12 col-xs-12 pull-info">修正</button>
+											</div>
+										</div>
+									</div>
+									<div class="heighthr"></div>
+								</div>
+							</div>
+							<div class="edit questionRow" style="display: none;">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="row">
+										<h5 class="col-md-2 col-sm-2 col-xs-12">
+											質問<span class="index"><?php echo $key;?></span>
+										</h5>
+										<div class="col-md-10 col-sm-10 col-xs-12">
+											<textarea name="questions[<?php echo $key;?>][content]" class="questionsTxt col-md-12 col-sm-12 col-xs-12"
+												placeholder="質問を入力してください" rows="2" aria-required="true"><?php echo $value['content']?></textarea>
+										</div>
+									</div>
+								</div>
+								<input class="typeQuestion" name="questions[<?php echo $key;?>][typeQuestion]" value="1" type="hidden">
+								<div class="heighthr"></div>
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="row">
+										<h5 class="col-md-12 col-sm-12 col-xs-12">
+											<label class="form-check-input">
+												<input class="changeType" name="questions[<?php echo $key;?>][changeType]" id="cbSelect" value="1" <?php if($value['typeQuestion'] == 2) echo "checked";?> type="checkbox">
+												<label for="cbSelect"></label>
+												複数回答を許可する ※チェックボックス使用
+											</label>
+										</h5>
+									</div>
+								</div>
+								<?php if(!empty($value['answers'])):?>
+								<?php foreach($value['answers'] as $keyAnswer => $valueAnswer):?>
+								<div class="answerRow col-md-12 col-sm-12 col-xs-12">
+									<div class="row">
+										<div class="col-md-1 col-sm-1 col-xs-1 col-md-offset-1 numAnsRow">1</div>
+										<div class="col-md-10 col-sm-10 col-xs-10 none-distance">
+											<input name="questions[<?php echo $key?>][answers][<?php echo $keyAnswer?>]" class="answerInput col-md-10 col-sm-10 col-xs-10" value="<?php echo $valueAnswer['content']?>" aria-required="true">
+											<div class="col-md-1 col-sm-1 col-xs-2">
+												<a class="add" href="javascript:void(0)" onclick="SURVEY_QUESTIONS.addAnswer(this)">
+													<span class="glyphicon glyphicon-plus"></span> 
+												</a>
+												<a class="remove" href="javascript:void(0)" onclick="SURVEY_QUESTIONS.removeAnswer(this)">
+													<span class="pull-right glyphicon glyphicon-minus remove"></span>
+												</a>
+											</div>
+										</div>
+										<div class="col-md-offset-2 col-sm-offset-1 col-xs-offset-1 col-md-10 col-sm-10 col-xs-10 answerInputRow"></div>
+									</div>
+								</div>
+								<?php endforeach;?>
+								<?php endif;?>
+								<div class="col-md-10 col-sm-10 col-xs-12 pull-right">
+									<div class="row">
+										<div class="col-md-2 col-sm-4 col-xs-12 pull-right">
+											<button onclick="SURVEY_QUESTIONS.save(this)"
+												name="type-question" type="button"
+												class="btn btn-space btn-primary col-md-12 col-sm-12 col-xs-12 pull-right">保存</button>
+										</div>
+										<div class="col-md-2 col-sm-4 col-xs-12 pull-right">
+											<button onclick="SURVEY_QUESTIONS.cancelSave(this)"
+												type="button" name="type-question"
+												class="btn btn-space btn-default col-md-12 col-sm-12 col-xs-12 pull-right">キャンセル</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+						<?php endif;?>
+						<?php endforeach;?>
+					</div>
+					<div id="createQuesstion"></div>
+					<div class="heighthr"></div>
+					<div class="form-group">
+						<h5 class="col-md-2 col-sm-2">更新日</h5>
+						<div id="datepicker" class="none-padding-left col-md-3 col-sm-4 col-xs-12 input-group date">
+							<input id="createDate" name="createDate" type="text" class="createDate form-control">
+							<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span> </span>
+						</div>
+					</div>
+					<div class="form-group">
+						<div id="errorCreateDate" style="display:none" class="col-md-offset-2 col-sm-offset-2 col-md-3 col-sm-4 col-xs-12">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-2 col-sm-4 col-xs-12 pull-right">
+							<button type="submit" class="btn col-md-12 col-sm-12 col-xs-12 btn-space btn-primary">保存</button> 
+						</div>
+						<div class="col-md-2 col-sm-4 col-xs-12 pull-right">
+							<button type="button" onclick="history.go(-1);" class="btn col-md-12 col-sm-12 col-xs-12 btn-space btn-default">戻る</button> 
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade dialog-position" id="pleaseWaitDialog" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">保存確認</h4>
+			</div>
+			<div class="modal-body">
+				<p>保存確認ください</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default pull-left" data-dismiss="modal">戻る</button>
+				<button type="button" class="btn btn-primary" 
+					onClick="location.href = 'survey-module-12-1-3-edit-question-succeed.html'" data-dismiss="modal">はい</button>
+			</div>
+		</div> 
+	</div>
+</div>
+<script type="text/javascript" src="<?php echo $this->basePath()?>/js/survey-management/survey-questions-edit.js"> </script>
+<script>
+   $( document ).ready(function() {
+	   SURVEY_QUESTIONS.initLoad();
+    });   
+</script>

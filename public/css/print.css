@@ -1,0 +1,156 @@
+@media print {
+    a[href]:after {
+        content: none !important;
+    }
+
+    .bg-primary {
+        background-color: #337ab7 !important;
+        color: #fff !important;
+    }
+
+    .text-color-white {
+        color: #FFF !important;
+    }
+    .header-layout{
+        display: none;
+    }
+    button{
+        display: none;
+    }
+    .btn {
+        display: none !important;
+        padding: 6px 12px !important;
+        margin-bottom: 0 !important;
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        line-height: 1.42857143 !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+        vertical-align: middle !important;
+        -ms-touch-action: manipulation !important;
+        touch-action: manipulation !important;
+        cursor: pointer !important;
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+        background-image: none !important;
+        border: 1px solid transparent !important;
+        border-radius: 4px !important;
+    }
+
+    .btn-success {
+        color: #fff !important;
+        background-color: #31b0d5 !important;
+        border-color: #269abc !important;
+        background-image: linear-gradient(to bottom,#5bc0de 0,#2aabd2 100%) !important;
+    }
+
+    .btn-success {
+        color: #fff !important;
+        background-color: #5cb85c !important;
+        border-color: #4cae4c !important;
+        background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#70d900), to(#57a900)) !important;
+    }
+
+    .btn-primary {
+        color: #fff !important;
+        background-color: #0275d8 !important;
+        border-color: #0275d8 !important;
+        background-image: linear-gradient(to bottom,#0175d8 0,#2d6ca2 100%) !important;
+    }
+
+    .btn-warning {
+        color: #fff !important;
+        background-color: #f0ad4e !important;
+        border-color: #eea236 !important;
+        background-image: linear-gradient(to bottom,#f0ad4e 0,#eb9316 100%) !important;
+    }
+
+    .btn-danger {
+        color: #fff !important;
+        background-color: #d9534f !important;
+        border-color: #d43f3a !important;
+        background-image: linear-gradient(to bottom,#d9534f 0,#c12e2a 100%) !important;
+    }
+
+    .border-box {
+        background-color: #fcf8e3 !important;
+    }
+
+    .table > thead > tr > th {
+        color: #fff !important;
+        background: #2980b9 !important;
+    }
+
+    .table > tbody > tr > .bg-header-vertical {
+        color: #FFF !important;
+        background: #2980b9 !important;
+        vertical-align: middle !important;
+    }
+
+    .table > thead > tr > .bg-header-vertical-print-top {
+        background: #737373 !important;
+        color: #FFF !important;
+        vertical-align: middle !important;
+    }
+
+    .table > tbody > tr > .bg-header-vertical-print {
+        background: #ccc !important;
+        vertical-align: middle !important;
+    }
+
+    .form-control {
+        display: block !important;
+        width: 100% !important;
+        height: 34px !important;
+        padding: 6px 12px !important;
+        font-size: 14px !important;
+        line-height: 1.42857143 !important;
+        color: #555 !important;
+        background-color: #fff !important;
+        background-image: none !important;
+        border: 1px solid #ccc !important;
+        border-radius: 4px !important;
+    }
+
+    .btn-default {
+        text-shadow: 0 1px 0 #fff !important;
+        background-image: -webkit-linear-gradient(top,#fff 0,#e0e0e0 100%) !important;
+        background-image: linear-gradient(to bottom,#fff 0,#e0e0e0 100%) !important;
+        background-repeat: repeat-x !important;
+        border-color: #dbdbdb !important;
+    }
+
+    .btn-space {
+        margin-top: 10px;
+    }
+
+    #tabGuide > li > a {
+        width: 200px;
+        height: 62px;
+    }
+
+    #tabGuide > li {
+        background: #f2f2f2 !important;
+    }
+
+    .nav-tabs > li {
+        background: #f2f2f2 !important;
+    }
+    .title-search{
+	    background: url("../images/title-search.png") !important;
+	    background-size: 100% 100% !important;
+	    background-repeat: no-repeat !important;
+	    height: 100% !important;
+	    position: inherit;
+	    color: green !important;
+	}
+	.box-search{
+	    background: url("../images/box-search.png") !important;
+	    background-size: 100% 100% !important;
+	    background-repeat: no-repeat !important;
+	    padding-top:5px !important;
+	    padding-bottom:5px !important;
+	}   
+}

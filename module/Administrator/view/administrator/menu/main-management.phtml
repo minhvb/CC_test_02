@@ -1,0 +1,91 @@
+<link href="<?php echo $this->basePath(); ?>/css/bootstrap-datepicker/bootstrap-datepicker.css" media="screen,print" rel="stylesheet" type="text/css">
+
+<!--Scripts-->
+<script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/export/export.js"></script>
+<script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/bootstrap-datepicker.ja.min.js"></script>
+
+<!--Body-->
+<div class="container content-large-wrapper container-body">
+    <div class="box-header">
+        <div class="row">
+            <div class="col-md-8 col-sm-8 col-xm-12">
+                <h4>
+                    <b><?php echo $this->translate('title_mainMenu'); ?></b>
+                </h4>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="title"></div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-12 col-xs-12">
+                        <span class="icon-label"></span>
+                        施策情報の管理
+                    </label>
+                    <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-1 col-sm-offset-1">
+                        <a href="<?php echo $this->url('administrator/default', array('controller' => 'policy-management'));?>" class="btn btn-space btn-success col-md-12 col-sm-12 col-xs-12 pull-left">
+                            施策情報の追加・修正・削除
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-12 col-xs-12">
+                        <span class="icon-label"></span>
+                        アンケートを登録・集計する</label>
+                    <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-1 col-sm-offset-1 ">
+                        <a href="<?php echo $this->url('administrator/default', array('controller' => 'survey-management'));?>" class="btn btn-space btn-success col-md-12 col-sm-12 col-xs-12 pull-left">
+                            施策共通アンケートの修正・集計
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-12 col-xs-12">
+                        <span class="icon-label"></span>
+                        お知らせの管理</label>
+                    <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-1 col-sm-offset-1">
+                        <a href="<?php echo $this->url('administrator/default', array('controller' => 'notice-management'));?>" class="btn btn-space btn-success col-md-12 col-sm-12 col-xs-12 pull-left">
+                            お知らせの追加・修正・削除
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-12 col-xs-12">
+                        <span class="icon-label"></span>
+                        ユーザーの管理</label>
+                    <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-1 col-sm-offset-1">
+                        <a href="<?php echo $this->url('administrator/default', array('controller' => 'user-management'));?>" class="btn btn-space btn-success col-md-12 col-sm-12 col-xs-12 pull-left">
+                            ユーザーの管理
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-12 col-xs-12">
+                        <span class="icon-label"></span>
+                        利用状況の集計</label>
+                    <div class="col-md-3 col-sm-3 col-xs-12 col-md-offset-1 col-sm-offset-1 ">
+                        <button type=button class="btnExportTotalLoginByRole btn btn-space btn-success col-md-12 col-sm-12 col-xs-12 pull-left">
+                            ログイン数集計
+                        </button>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-12">
+                        <button type=button class="btnExportLoginData btn btn-space btn-success col-md-12 col-sm-12 col-xs-12 pull-left">
+                            ログインデータ出力
+                        </button>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-12">
+                        <button type=button class="btnExportPolicyStatistic btn btn-space btn-success col-md-12 col-sm-12 col-xs-12 pull-left">
+                            施策情報閲覧等回数集計
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php
+    echo $this->partial('administrator/partial/export-time-modal.phtml', array("action"=>$this->url('administrator/default', array('controller'=>'report'))));
+?>

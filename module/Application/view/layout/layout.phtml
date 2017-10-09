@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?php
+    use Application\Service\LoginService;
+    use Application\Utils\ApplicationConst;
+    use Application\Utils\UserHelper;
+
+    ?>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>【産労AP】</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <!-- Le styles -->
+    <link href="<?php echo $this->basePath(); ?>/css/jquery-ui.css" media="screen,print" rel="stylesheet"
+          type="text/css">
+    <link href="<?php echo $this->basePath(); ?>/css/bootstrap.min.css" media="screen,print" rel="stylesheet"
+          type="text/css">
+    <link href="<?php echo $this->basePath(); ?>/css/bootstrap-theme.min.css" media="screen,print" rel="stylesheet"
+          type="text/css">
+    <link href="<?php echo $this->basePath(); ?>/css/styleLogin.css" media="screen,print" rel="stylesheet"
+          type="text/css">
+    <link href="<?php echo $this->basePath(); ?>/css/styleTable.css" media="screen,print" rel="stylesheet"
+          type="text/css">
+    <link href="<?php echo $this->basePath(); ?>/css/styleLayout.css" media="screen,print" rel="stylesheet"
+          type="text/css">
+    <link href="<?php echo $this->basePath(); ?>/css/style.css" media="screen,print" rel="stylesheet"
+          type="text/css">
+    <link href="<?php echo $this->basePath(); ?>/css/print.css" media="screen,print" rel="stylesheet" type="text/css">
+    <link href="<?php echo $this->basePath(); ?>/css/bootstrap-datetimepicker.css" media="screen,print" rel="stylesheet"
+          type="text/css">
+    
+
+    <!-- Scripts -->
+    <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/jquery.min.js"></script>
+    <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/jquery-ui.js"></script>
+    <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/bootstrap-datetimepicker.js"></script>
+    
+    <script type="text/javascript"
+            src="<?php echo $this->basePath(); ?>/js/jquery-validation/jquery.validate.js"></script>
+    <script type="text/javascript"
+            src="<?php echo $this->basePath(); ?>/js/jquery-form/jquery.form.js"></script>
+    <script type="text/javascript"
+            src="<?php echo $this->basePath(); ?>/js/jquery-validation/additional-methods.js"></script>
+    <!--[if IE]>
+    <script type="text/javascript" src="<?php $this->basePath(); ?>/js/jquery-placeholder/jquery.placeholder.js"></script>
+    <![endif]-->
+    <script type="text/javascript"
+            src="<?php echo $this->basePath(); ?>/js/common.js?v=<?php echo ApplicationConst::VERSION_STATIC_SOURCE; ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/my-page/change-password.js"></script>
+    <!--[if IE]>
+    <style>
+        input, textarea { color: #000; }
+        .placeholder { color: #aaa; }
+    </style>
+    <![endif]-->
+</head>
+<body>
+<?php
+$ref = UserHelper::isAdministrator($userInfo['roleId']) ? LoginService::ROLE_ADMIN : (UserHelper::isInputRole($userInfo['roleId']) ? LoginService::ROLE_INPUT : '');
+$query = !empty($ref) ? array('ref' => $ref) : array();
+?>
+<div class="container-fluid">
+    <?php if($isPC) { ?>
+        <nav class="bg-primary header-layout-up">
+            <div class="container">
+
+                <div class="navbar col-md-10 col-sm-12 col-xs-12 pull-right">
+
+                    <div class="row">
+                        <a href="<?php echo $this->url('logout', array(), array('query' => $query)); ?>">
+                            <button class="btn btn-default btn-sm col-md-2 col-sm-2 col-xs-2 pull-right" type="button">
+                                <span class="icon-log-out"></span> ログアウト
+                            </button>
+                        </a>
+                        <a>
+                            <button class="btn btn-default btn-sm col-md-2 col-sm-2 col-xs-2 pull-right"
+                                    onclick="COMMON.openSettingMailModal('<?php echo $this->userInfo["userId"]; ?>');"
+                                    type="button">
+                                <span class="icon-envelope"></span> メール通知
+                            </button>
+                        </a>
+                        <a>
+                            <button class="btn btn-default btn-sm col-md-2 col-sm-2 col-xs-2 pull-right" data-toggle="modal" data-target="#infoUserModal" type="button">
+                                <span class="icon-user"></span>
+                                ユーザー情報更新
+                            </button>
+                        </a>
+
+                        <h5 class="col-md-4 col-sm-3 col-xs-3 pull-right text-right ">
+                            <?php if (isset($this->userInfo['username'])) echo $this->userInfo['username']; ?>
+                        </h5>
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+        <nav class="bg-primary header-layout-on">
+            <div class="container header-layout-on">
+                <div class="row">
+                    <div class="navbar-header col-md-4 col-sm-4 text-center ">
+                        <a href="<?php if (isset($this->userInfo['roleId']) && (!UserHelper::isViewer($this->userInfo['roleId']))) echo '/administrator/menu/index'; else echo '/'; ?>"
+                           class="text-color-white">
+                            <img src="/images/logo.png" class="pull-left logo">
+                        </a>
+                    </div>
+                    <div class="col-md-8 col-sm-8">
+                        <div class="title-notice">
+                            <img src="/images/notice.png">
+                            <a href="javascript:void(0)" data-toggle="modal" data-target="#listNotice" class="pull-right">
+                                一覧を見る<span class="icon-link" ></span>
+                            </a>
+                        </div>
+                        <?php if (!empty($noticeList)) { ?>
+                            <div id="myCarousel" class="carousel slide"
+                                 style="border: none">
+                                <div class="carousel-inner" role="listbox">
+                                <?php $first = true; ?>
+                                    <?php foreach ($noticeList as $key => $notice): ?>
+                                    <?php if ($first): ?>
+                                    <div class="item active">
+                                    <?php $first = false; ?>
+                                    <?php else: ?>
+                                    <div class="item">
+                                    <?php endif; ?>
+                                            <h4 class="text-center">
+                                                <a href="<?php echo $notice['href']; ?>"target="_blank"><?php echo $notice['title']; ?></a>
+                                            </h4>
+                                        </div>
+                                    <?php endforeach ?>
+                                </div>
+                                <!-- Left and right controls -->
+                                <?php if (count($noticeList) > 1) { ?>
+                                    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                                        <span class="chevron-left" aria-hidden="true"></span>
+                                    </a>
+                                    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                                        <span class="chevron-right" aria-hidden="true"></span>
+                                    </a>
+                                <?php } ?>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    <?php } else { ?>
+        <nav class="header-layout-up">
+            <div class="container">
+                <div class="navbar col-md-12 col-sm-12 col-xs-12 pull-right">
+                    <div class="row">
+                        <h4 class="text-right"><?php if (isset($this->userInfo['username'])) echo $this->userInfo['username']; ?></h4>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <nav class="header-layout-on">
+            <div class="container header-layout-on">
+                <div>
+                    <div class="row ">
+                        <div class="navbar-header col-md-6 col-sm-8 col-xs-8 text-center ">
+                            <a href="<?php if (isset($this->userInfo['roleId']) && (!UserHelper::isViewer($this->userInfo['roleId']))) echo '/administrator/menu/index'; else echo '/'; ?>" class="text-color-white">
+                                <img src="/images/logo-mobile.png" class="pull-left logo">
+                            </a>
+                        </div>
+                        <button type="button" class="navbar-toggle collapsed btn-menu" data-toggle="collapse" data-target="#listMenu" aria-expanded="false">
+                            MENU
+                        </button>
+                    </div>
+                    <div id="listMenu" class="row menu-home-page collapse">
+                        <u>
+                            <li data-toggle="modal" data-target="#infoUserModal"><span class="icon-user-gr"></span><a href="javascript:void(0)">ユーザー情報更新</a></li>
+                            <li onclick="COMMON.openSettingMailModal('<?php echo $this->userInfo["userId"];?>');"><span class="icon-mail-gr"></span><a href="javascript:void(0);">メール通知</a></li>
+                            <li><span class="icon-flag-gr"></span><a href="javascript:void(0);">検索条件呼び出し</a></li>
+                            <li><span class="icon-guide-gr"></span><a href="javascript:void(0);">使い方</a></li>
+                            <li><span class="icon-log-out-gr"></span><a href="<?php echo $this->url('logout', array(), array('query' => $query)); ?>">ログアウト</a></li>
+                            <li><a href="javascript:void(0);">サイトポリシー</a></li>
+                            <li><a href="javascript:void(0);">アクセシビリティ</a></li>
+                            <li><a href="javascript:void(0);">個人情報保護方針</a></li>
+                            <li><a href="javascript:void(0);">問い合わせ先</a></li>
+                        </u>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="title-notice">
+                            <img class="lg-notice" src="/images/notice.png">
+                            <a href="javascript:void(0)" data-toggle="modal" data-target="#listNotice" class="pull-right">
+                                一覧を見る<span class="icon-link" ></span>
+                            </a>
+                        </div>
+                        <?php if (!empty($noticeList)) { ?>
+                            <div id="myCarousel" class="carousel slide" data-ride="carousel"
+                                 style="border: none">
+                                <ol class="carousel-indicators">
+                                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                                    <li data-target="#myCarousel" data-slide-to="1"></li>
+                                    <li data-target="#myCarousel" data-slide-to="2"></li>
+                                    <li data-target="#myCarousel" data-slide-to="3"></li>
+                                    <li data-target="#myCarousel" data-slide-to="4"></li>
+                                </ol>
+                                <div class="carousel-inner" role="listbox">
+                                    <?php foreach ($noticeList as $key => $notice): ?>
+                                        <div class="item <?php echo ($key == 1) ? 'active' : ''; ?>">
+                                            <h4 class="text-center">
+                                                <a href="<?php echo $notice['href']; ?>"target="_blank"><?php echo $notice['title']; ?></a>
+                                            </h4>
+                                        </div>
+                                    <?php endforeach;?>
+                                </div>
+
+                                <?php if (count($noticeList) > 1) { ?>
+                                    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                                        <span class="chevron-left" aria-hidden="true"></span>
+                                    </a>
+                                    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                                        <span class="chevron-right" aria-hidden="true"></span>
+                                    </a>
+                                <?php } ?>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    <?php } ?>
+
+    <div class="container">
+        <?php echo $this->content; ?>
+    </div>
+
+    <?php
+    echo $this->partial('layout/setting-mail-partial.phtml', array(
+            "userInfo" => $userInfo,
+            "settingMailAttributes"=>$settingMailAttributes,
+            "attributePolicyType"=>$attributePolicyType,
+            "settingMailUser"=>$settingMailUser,
+            "messageCannotOpenSettingMail"=>$messageCannotOpenSettingMail,
+        )
+    );
+
+    echo $this->partial('layout/user-info-partial.phtml', array(
+            "userInfo" => $userInfo,
+            "businessAttributes" => $businessAttributes,
+            "userCanShowSQ" => $userCanShowSQ,
+            "securityQuestions" => $securityQuestions,
+            "messageConfirmUpdateInfo" => $messageConfirmUpdateInfo,
+        )
+    );
+
+    echo $this->partial('layout/change-password-partial.phtml', array("userInfo" => $userInfo, "isPC"=>$isPC));
+    ?>
+
+    <?php if($isPC) { ?>
+        <div class="footer-menu">
+            <ul class="bottom-menu text-center">
+                <li>
+                    <a href="../User-Admin/home-module-in-create.html" target="_blank">
+                        <u>
+                            サイトポリシー
+                        </u>
+                    </a>
+                </li>
+                <li>
+                    <a href="../User-Admin/home-module-in-create.html" target="_blank">
+                        <u>
+                            関連リンク
+                        </u>
+                    </a>
+                </li>
+                <li>
+                    <a href="../User-Admin/home-module-in-create.html" target="_blank">
+                        <u>
+                            アクセシビリティ
+                        </u>
+                    </a>
+                </li>
+                <li>
+                    <a href="../User-Admin/home-module-in-create.html" target="_blank">
+                        <u>
+                            個人情報保護方針
+                        </u>
+                    </a>
+                </li>
+                <li>
+                    <a href="../User-Admin/home-module-in-create.html" target="_blank">
+                        <u>
+                            問い合わせ先
+                        </u>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <footer class="text-center footer">
+            <p class="text-color-white">Copyright© 2017 Bureau of Industrial and Labor Affairs, Tokyo Metropolitan Government. All Rights Reserved.</p>
+        </footer>
+    <?php } else { ?>
+        <nav class="footer-layout-bottom">
+            <div class="container">
+
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <div class="row">
+                        <a data-toggle="modal" data-target="#policySearch">
+                            <h4 class="text-center">
+                                <img src="/images/icon-search-gr.png" height="40" width="40">
+                                <p>詳細検索</p>
+                            </h4>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4 none-distance">
+                    <div class="row">
+                        <a data-toggle="modal" data-target="#searchConditionCall">
+                            <h4 class="text-center">
+                                <img src="/images/icon-flag-gr.png" height="40" width="40">
+                                <p>検索条件呼び出し</p>
+                            </h4>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <div class="row">
+                        <a data-toggle="modal"  data-target="#settingMail">
+                            <h4 class="text-center">
+                                <img src="/images/icon-mail-gr.png" height="40" width="50">
+                                <p>メール通知</p>
+                            </h4>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <footer class="text-center footer">
+            <p class="text-color-white">Copyright© 2017 Bureau of Industrial and Labor Affairs, Tokyo Metropolitan Government. All Rights Reserved.</p>
+        </footer>
+    <?php } ?>
+</div>
+<!-- Modal -->
+<script>
+    $(window).resize(function () {
+        changeWindowSize();
+    });
+    function changeWindowSize() {
+        var heightWindow = $(window).height();
+        var heightFooterMenu = $('.footer-menu').height();
+        var headerLayoutOn = $('.container-fluid>.header-layout-on').height();
+        var heightFooter = $('.footer').height();
+        var heightLayoutUp = $('.container-fluid>.header-layout-up').height();
+        var heightContent = $('.container-fluid>.container').height();
+
+//        if(heightWindow>(heightFooterMenu+headerLayoutOn+heightFooter+heightLayoutUp+heightContent))
+//        {
+        $('.container-fluid>.container').css("min-height", heightWindow - headerLayoutOn - heightFooter - heightFooterMenu - heightLayoutUp - 10);
+
+//        }
+    }
+    $(document).ready(function () {
+        changeWindowSize();
+    });
+
+</script>
+<!-- ================LAYOUT POPUP=================-->
+<div class="popup-layout">
+    <div id="listNotice" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"><?php echo $this->translate('MSG_NO_002_NoticeList'); ?></h4>
+                </div>
+                <div class="modal-body over-flow-ie">
+                    <table class="table tab-content table-bordered table-striped table-hover ">
+                        <?php if (!empty($noticeList)) { ?>
+                            <?php foreach ($noticeList as $notice): ?>
+                                <tr>
+                                    <td><?php echo $notice['gengoFirstPublicDate']; ?></td>
+
+                                    <td><a href="<?php echo $notice['href']; ?>"
+                                           target="_blank"><?= $notice['title'] ?></a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php } else { ?>
+                            <h3 class="text-center"><?php echo $this->translate('MSG_NO_002_EmptyResult'); ?></h3>
+                        <?php } ?>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $this->translate('MSG_AP_005_BackLabel'); ?>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- ================LAYOUT END=================-->
+
+<div id="full-screen" class="full-screen" style="display: none;"></div>
+</body>
+</html>

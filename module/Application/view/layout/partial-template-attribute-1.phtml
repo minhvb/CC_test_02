@@ -1,0 +1,10 @@
+<tr class="row-item-content">
+    <td style="vertical-align: middle;" colspan="2">
+        <?php foreach($attribute as $row) { ?>
+        <label class="form-check-input">
+            <input name="<?php echo $name;?>[]" id="<?php echo $name;?>_<?php echo $row["id"];?>" <?php if(in_array($row["id"], $settingMailUser)) echo "checked";?> value="<?php echo $row["id"];?>" type="checkbox"> 
+            <label for="<?php echo $name;?>_<?php echo $row["id"];?>"></label> <?php echo $row["value"];?>
+        </label>
+        <?php } ?>
+    </td>
+</tr>

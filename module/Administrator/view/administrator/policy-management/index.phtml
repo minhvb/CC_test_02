@@ -1,0 +1,348 @@
+<?php
+$maxLength = 100;
+$datetimeFormat = \Application\Utils\DateHelper::DATE_TIME_FORMAT;
+$isRoleUserAdmin = \Application\Utils\UserHelper::isAdministrator($this->userInfo['roleId']);
+$firstResult = ($page - 1) * $resultPerPage + 1;
+$lastResult = (($page - 1) * $resultPerPage + $resultPerPage) < $totalResults ? (($page - 1) * $resultPerPage + $resultPerPage) : $totalResults;
+?>
+<div class="container-body">
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xm-12">
+                        <h3>
+                            <b> 施策情報一覧</b>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="box-data">
+                <form method="GET" id="search-policy">
+                    <div class="row">
+                        <div class="col-md-2 col-sm-3">
+                            <h5>入力所管部署</h5>
+                        </div>
+                        <div class="col-md-2 col-sm-3">
+                            <select class="form-control btn-space" name="ddlBureauId"
+                                    id="ddlBureauId" <?php echo $isDisable == 1 ? 'disabled="disabled"' : ''; ?>>
+                                <option value=""><h5>-- 所属団体 --</h5></option>
+                                <?php foreach ($glConfig['bureauId'] as $key => $value) { ?>
+                                    <option value="<?php echo $key; ?>" <?php echo isset($search['ddlBureauId']) && $search['ddlBureauId'] == $key ? 'selected' : ''; ?>><?php echo $value; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="col-md-2 col-sm-3">
+                            <select id="ddlDepartmentId" name="ddlDepartmentId"
+                                    class="form-control btn-space" <?php echo $isDisable == 1 ? 'disabled="disabled"' : ''; ?>>
+                                <option value="">-- 部 --</option>
+                                <?php foreach ($glConfig['departmentId'] as $key => $value) { ?>
+                                    <option name="<?php echo $value['parentId'] ?>"
+                                            value="<?php echo $key; ?>" <?php echo isset($search['ddlDepartmentId']) && $search['ddlDepartmentId'] == $key ? 'selected' : ''; ?>><?php echo $value['value'] ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="col-md-2 col-sm-3">
+                            <select id="ddlDivisionId" name="ddlDivisionId"
+                                    class="form-control btn-space" <?php echo $isDisable == 1 && !empty($this->userInfo['divisionId']) ? 'disabled="disabled"' : ''; ?>>
+                                <option value="">-- 課 --</option>
+                                <?php foreach ($glConfig['divisionId'] as $key => $value) {
+                                    if ($value['value'] != '') {
+                                        ?>
+                                        <option name="<?php echo $value['parentId'] ?>"
+                                                value="<?php echo $value['code']; ?>" <?php echo isset($search['ddlDepartmentId']) && $value['parentId'] == 'departmentId' . $search['ddlDepartmentId'] && isset($search['ddlDivisionId']) && $search['ddlDivisionId'] == $value['code'] ? 'selected' : ''; ?>><?php echo $value['value'] ?></option>
+                                    <?php }
+                                } ?>
+
+                            </select>
+                        </div>
+                        <div class="col-md-1 col-sm-2 col-xs-6 col-md-offset-0 col-sm-offset-4 none-distance">
+                            <label class="btn-space form-check-input">
+                                <input id="cbTypePolicy_1" type="checkbox" value="1"
+                                       name="cbTypePolicy[]" <?php echo isset($search['cbTypePolicy']) && in_array(1, $search['cbTypePolicy']) ? 'checked' : ''; ?>/>
+                                <label for="cbTypePolicy_1"></label>
+                                編集中
+                            </label>
+                        </div>
+                        <div class="col-md-1 col-sm-2 col-xs-6 none-distance">
+                            <label class="btn-space form-check-input">
+                                <input id="cbTypePolicy_2" type="checkbox" value="2"
+                                       name="cbTypePolicy[]" <?php echo isset($search['cbTypePolicy']) && in_array(2, $search['cbTypePolicy']) ? 'checked' : ''; ?>/>
+                                <label for="cbTypePolicy_2"></label>
+                                公開待ち
+                            </label>
+                        </div>
+                        <div class="col-md-1 col-sm-2 col-xs-6 none-distance">
+                            <label class="btn-space form-check-input">
+                                <input id="cbTypePolicy_3" type="checkbox" value="3"
+                                       name="cbTypePolicy[]" <?php echo isset($search['cbTypePolicy']) && in_array(3, $search['cbTypePolicy']) ? 'checked' : ''; ?>/>
+                                <label for="cbTypePolicy_3"></label>
+                                公開中
+                            </label>
+                        </div>
+
+                        <div class="col-md-1 col-sm-2 col-xs-6 none-distance">
+                            <label class="btn-space form-check-input">
+                                <input id="cbTypePolicy_4" type="checkbox" value="4"
+                                       name="cbTypePolicy[]" <?php echo isset($search['cbTypePolicy']) && in_array(4, $search['cbTypePolicy']) ? 'checked' : ''; ?>/>
+                                <label for="cbTypePolicy_4"></label>
+                                非公開
+                            </label>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 col-sm-3">
+                            <h5>フリーワード</h5>
+                        </div>
+                        <div class="col-md-6 col-sm-7">
+                            <input id="txtKeyword" name="txtKeyword" maxlength="256"
+                                   value="<?php echo isset($search['txtKeyword']) ? trim($search['txtKeyword']) : ''; ?>"
+                                   class="btn-space form-control" placeholder="キーワードを入力してください"/>
+                        </div>
+                        <?php if ($isRoleUserAdmin) { ?>
+                            <h5 style="float: left;">
+                                を含む
+                            </h5>
+                        <?php } else { ?>
+                            <div class="col-md-1 col-sm-2">
+                                <h5>
+                                    を含む
+                                </h5>
+                            </div>
+                        <?php } ?>
+                        <?php if ($isRoleUserAdmin) { ?>
+                            <label class="btn-space form-check-input label-note pull-left">
+                                <input id="cbAttentionFlag" type="checkbox" name="cbAttentionFlag"
+                                       value="1" <?php echo isset($search['cbAttentionFlag']) && $search['cbAttentionFlag'] == 1 ? 'checked' : ''; ?>/>
+                                <label for="cbAttentionFlag"></label>
+                                注目フラグ
+                            </label>
+                        <?php } ?>
+                        <div class="col-md-2 col-sm-4 col-xs-12 <?php echo $isRoleUserAdmin ? 'col-md-offset-0' : 'col-md-offset-1'; ?> col-sm-offset-4">
+                            <button id="btnSearchSubmit" type="button" onclick="POLICY.searchPolicy();"
+                                    class="btn btn-space btn-success col-md-12 col-sm-12 col-xs-12 pull-right">
+                                絞り込み
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div class="heighthr"></div>
+                <div id="toolBar" class="row">
+
+                    <div class="col-md-4 col-sm-12 col-xs-12 text-center none-padding-left">
+                        <?php if ($totalResults > 0) { ?>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <h5>総件数<?php echo number_format($totalResults); ?>件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo number_format($firstResult); ?>件から<?php echo number_format($lastResult); ?>件を表示</h5>
+                            </div>
+                        <?php } ?>
+                        <?php
+                        echo $this->partial('application/home/partial-paging.phtml', array(
+                                'totalResults' => $totalResults,
+                                'resultPerPage' => $resultPerPage,
+                                'totalPages' => $totalPages,
+                                'page' => $page,
+                                'urlPaging' => $currentUrl
+                            )
+                        )
+                        ?>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 text-center">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                <h5 id="checkbox-selected-first">0件の選択した施策を</h5>
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                <button id="btnPublic" type="button"
+                                        onclick="POLICY.publicPolicy();"
+                                        class="btn btn-space btn-warning col-md-12 col-sm-12 col-xs-12">公開
+                                </button>
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                <button id="btnPrivate" type="button"
+                                        onclick="POLICY.privatePolicy();"
+                                        class="btn btn-space btn-warning col-md-12 col-sm-12 col-xs-12">非公開
+                                </button>
+                            </div>
+                            <?php if ($isDisable != 1) { ?>
+                                <div class="col-md-4 col-sm-4 col-xs-12">
+                                    <button id="btnDelete" type="button"
+                                            onclick="POLICY.deletePolicy();"
+                                            class="btn btn-space btn-warning col-md-12 col-sm-12 col-xs-12">削除
+                                    </button>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 pull-right">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                <h5><br/></h5>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12 pull-left">
+                                <button type="button"
+                                        onclick="POLICY.clonePolicy()"
+                                        class="btn btn-space pull-right btn-primary col-md-12 col-sm-12 col-xs-12 ">
+                                    既存施策複写
+                                </button>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12 pull-right">
+                                <button type="button" onclick="POLICY.redirectToAddPolicy();"
+                                        class="btn btn-space btn-primary pull-right col-md-12 col-sm-12 col-xs-12">
+                                    新規施策作成
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="heighthr"></div>
+                <table id="table-list-policy" class="table tab-content table-bordered table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th class="text-center">
+                            <label class="form-check-input">
+                                <input id="checkbox-all" class="checkbox-all" type="checkbox" value="1" />
+                                <label for="checkbox-all"></label>
+                            </label>
+                        </th>
+                        <th class="text-center" style="vertical-align: middle;">NO</th>
+                        <th class="col-md-4" style="vertical-align: middle;">施策名</th>
+                        <th class="col-md-2" style="vertical-align: middle;">入力所管部署</th>
+                        <th class="col-md-2" style="vertical-align: middle;">ステータス</th>
+                        <th class="col-md-2" style="vertical-align: middle;">公開時期</th>
+                        <th class="col-md-1" style="vertical-align: middle;"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    if ($data) {
+                        foreach ($data as $key => $value) {
+                            $shortText = mb_substr($value['name'], 0, $maxLength, 'UTF-8');
+                            $fullText = $value['name'];
+                            ?>
+                            <tr id="box-policy-<?php echo $value['id']; ?>">
+                                <td class="text-center">
+                                    <input id="checkbox_policy_<?php echo $value['id']; ?>" type="checkbox"
+                                           name="rowTab1[]" value="<?php echo $value['id']; ?>">
+                                    <label for="c1"></label>
+                                </td>
+                                <td class="text-center"><?php echo ($key + 1) + ($page - 1) * $resultPerPage; ?></td>
+                                <td>
+
+                                    <?php if ($value['attentionFlag'] == 1 && $isRoleUserAdmin) { ?>
+
+                                        <img height="18" width="18" class="exclamation"
+                                             src="<?php echo $this->basePath(); ?>/images/exclamation.png">
+                                    <?php } ?>
+                                    <?php if ($value['recruitmentForm'] == 1) { ?>
+                                        <span class="flag-notice pull-left">【先着型】</span>
+                                    <?php } ?>
+
+                                    <span id="name-<?php echo $value['id']; ?>"
+                                          class="short-text"><?php echo $this->escapeHtml($shortText) ?></span>
+                                    <input type="hidden" id="shortText_<?php echo $value['id'] ?>"
+                                           value="<?php echo $this->escapeHtml($shortText) ?>"/>
+                                    <input type="hidden" id="fullText_<?php echo $value['id'] ?>"
+                                           value="<?php echo $this->escapeHtml($fullText) ?>"/>
+                                    <?php if (mb_strlen($fullText, 'UTF-8') > $maxLength) { ?>
+                                        <span id="add-more-<?php echo $value['id']; ?>" class="pull-right">
+                                            <a href="javascript:void(0)"
+                                               onclick="POLICY.showTextPolicy('<?php echo $value['id']; ?>')">
+                                                「・・・」
+                                            </a>
+                                        </span>
+                                    <?php } ?>
+                                </td>
+                                <td>
+                                    <?php echo isset($glConfig['departmentId'][$value['departmentId']]) ? $glConfig['departmentId'][$value['departmentId']]['value'] : ''; ?>
+                                    <?php echo isset($glConfig['departmentId'][$value['departmentId']]['divisionId'][$value['divisionId']]) ? $glConfig['departmentId'][$value['departmentId']]['divisionId'][$value['divisionId']] : ''; ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    if ($value['typePolicy'] != \Application\Utils\ApplicationConst::POLICY_TYPE_PUBLIC) {
+                                        echo isset($glConfig['typePolicy'][$value['typePolicy']]) ? $glConfig['typePolicy'][$value['typePolicy']] : '';
+                                    } else {
+                                        if ($value['typeRecruitmentTime'] == \Application\Utils\ApplicationConst::TYPE_AFTER_RECRUITMENT_TIME) {
+                                            echo '<span data-toggle="tooltip" data-placement="top" title="Tooltip on top" class="flag-notice">【公開中（募集終了）】</span>';
+                                        } else if (isset($glConfig['typeRecruitmentTime'][$value['typeRecruitmentTime']])) {
+                                            echo $glConfig['typeRecruitmentTime'][$value['typeRecruitmentTime']];
+                                        } else {
+                                            echo $glConfig['typePolicy'][\Application\Utils\ApplicationConst::POLICY_TYPE_PUBLIC];
+                                        }
+                                    }
+
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    if (intval($value['publishStartdate']) > 0 && intval($value['publishEnddate'] > 0)) {
+                                        echo date($datetimeFormat, intval($value['publishStartdate'])) . ' ～ ' . date($datetimeFormat, intval($value['publishEnddate']));
+                                    } else if (intval($value['publishStartdate']) > 0) {
+                                        echo date($datetimeFormat, intval($value['publishStartdate'])) . ' ～ 。。。';
+                                    } else if (intval($value['publishEnddate']) > 0) {
+                                        echo '。。。 ～ ' . date($datetimeFormat, intval($value['publishEnddate']));
+                                    } else {
+                                        echo '&nbsp;';
+                                    }
+                                    ?>
+                                </td>
+                                <td class="text-center">
+                                    <button type="button"
+                                            onclick="POLICY.redirectToEditPolicy(<?php echo $value['id']; ?>, '<?php echo $this->url('policy-management/default', array('action' => 'edit', 'policyId' => $value['id'])) ?>')"
+                                            class="btn btn-default">修正
+                                    </button>
+                                </td>
+
+                            </tr>
+                        <?php }
+                    } else {
+                        ?>
+                        <tr>
+                            <td colspan="7"
+                                class="text-center"><?php echo $this->translate('MSG_PO_036_Empty_Result') ?></td>
+                        </tr>
+                    <?php } ?>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                <h5 id="checkbox-selected-last">0件の選択した施策を</h5>
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                <button id="btnPublic" type="button"
+                                        onclick="POLICY.publicPolicy();"
+                                        class="btn btn-space btn-warning col-md-12 col-sm-12 col-xs-12">公開
+                                </button>
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                <button id="btnPrivate" type="button"
+                                        onclick="POLICY.privatePolicy();"
+                                        class="btn btn-space btn-warning col-md-12 col-sm-12 col-xs-12">非公開
+                                </button>
+                            </div>
+                            <?php if ($isDisable != 1) { ?>
+                                <div class="col-md-4 col-sm-4 col-xs-12">
+                                    <button id="btnDelete" type="button"
+                                            onclick="POLICY.deletePolicy();"
+                                            class="btn btn-space btn-warning col-md-12 col-sm-12 col-xs-12">削除
+                                    </button>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript"
+        src="<?php echo $this->basePath(); ?>/js/policy/policy.js?v=<?php echo \Application\Utils\ApplicationConst::VERSION_STATIC_SOURCE; ?>"></script>
+<script>
+    $(document).ready(function () {
+
+        POLICY.messageList = <?php echo json_encode($messages);?>;
+        POLICY.init();
+    });
+</script>
